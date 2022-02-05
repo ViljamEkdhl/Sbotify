@@ -30,35 +30,40 @@ async function createListOfMembers(Interaction){
         console.log('-----------------------------------------------------------')
         console.dir(member.presence.activities)
     });*/
-
     checkForMembersActivity(memberlist);
 
 }
 
 function checkForMembersActivity(memberlist){
-    let songName = '';
-    let artist = '';
     let date = new Date();
     let currentTime = date.getHours() + ':' + date.getMinutes();
 
     let timeDif = '';
     console.dir(currentTime);
-
-    //while(true){}
-    memberlist.forEach(member => {
-        console.log(member.presence.activities[0])
-
-        const songInformation = {
-            songName: member.presence.activities[0].details,
-            artist: member.presence.activities[0].state,
-            startTime: member.presence.activities[0].timestamps.start,
-            endTime: member.presence.activities[0].timestamps.end
-        }
+    loop();
 
 
-        timeDif = member.presence.activities[0].timestamps.end.getHours() + ':' + member.presence.activities[0].timestamps.end.getMinutes();
-        console.dir(timeDif);
-        musicStats.addSongToStats(songInformation);
-    });
+    function loop() {
+        console.log('Initiate search');
+        memberlist.forEach(member => {
+
+            console.log(member.presence.activities[0])
+        
+            const songInformation = {
+                songName: member.presence.activities[0].details,
+                artist: member.presence.activities[0].state,
+                startTime: member.presence.activities[0].timestamps.start,
+                endTime: member.presence.activities[0].timestamps.end
+            }
+        
+            timeDif = member.presence.activities[0].timestamps.end.getHours() + ':' + member.presence.activities[0].timestamps.end.getMinutes();
+            console.dir(timeDif);
+            musicStats.addSongToStats(songInformation);
+        });
+        setTimeout(() => {loop();}, 60000);// körs varje minut.
+
+        //Lägg detta i en try-catch och om den misslyckas 
+    }
+
 
 }
