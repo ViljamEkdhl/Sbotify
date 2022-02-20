@@ -3,6 +3,7 @@ const users = require('./users.js');
 // Require the necessary discord.js classes
 const { Client, Intents, Presence } = require('discord.js');
 const { token } = require('./config.json');
+const { userInList, addUserToList } = require('./users.js');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES] });
@@ -22,15 +23,28 @@ client.on('interactionCreate', async Interaction =>{
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
 
-	console.log(newPresence);
-	//FIXA DENNA IF-SATS så att endast personer med spotify som aktivitet kommer med.
-	if(newPresence.activities.length > 0 && (newPresence.activities[0].name === 'Spotify' || newPresence.activities[1].name === 'Spotify')){
+	//console.log(newPresence.activities);
+	//FIXA DENNA IF-SATS så att endast personer med spotify som aktivitet kommer med, Om någon activity är spotify
+
+
+	newPresence.activities.forEach(async function (activity) {
+		
+		console.log(activity.name);
+		console.log('----------');
+		if(activity.name === 'Spotify' && await users.userInList(newPresence) === false){
+			users.addUserToList(newPresence);
+		}
+	});
+
+	if(newPresence.activities.find(element => element.name === 'Spotify') === undefined && await users.userInList(newPresence) === true){
+		users.removeUserFromList(newPresence);
+	}
+	/*if(newPresence.activities.length > 0 && (newPresence.activities[0].name === 'Spotify' || newPresence.activities[1].name === 'Spotify')){
 		users.addUserToList(newPresence);
 	}else{
 		users.removeUserFromList(newPresence);
-	}
+	}*/
 	//console.log('-------------------------------------------------------------------------------');
-	console.log(newPresence);
 });
 
 
