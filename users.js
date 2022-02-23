@@ -16,13 +16,13 @@ module.exports = {
 }
 
 
-//Creates a list of users that is on the specific guild
+//Creates a list of users that is in the specific guild
 async function createListOfMembers(Interaction){
 
     const guild = await Interaction.client.guilds.fetch('834009667884941323')
     const members = await guild.members.fetch();
 
-    await console.log(members);
+    console.log(members);
 
     /*await Interaction.reply(
         members.forEach(members => {
