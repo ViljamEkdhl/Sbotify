@@ -18,7 +18,7 @@ module.exports = {
     const { commandName } = Interaction;
 
     if(commandName === 'initiate'){
-        await createListOfMembers(Interaction);
+        await checkForMembersActivity(memberList);
     }
    },
 
@@ -69,11 +69,14 @@ module.exports = {
 }
 
 
-//Creates a list of users that is in the specific guild
-async function createListOfMembers(Interaction){
+function checkForMembersActivity(memberList){
+    let date = new Date();
+    let currentTime = date.getHours() + ':' + date.getMinutes();
 
-    const guild = await Interaction.client.guilds.fetch('834009667884941323')
-    const members = await guild.members.fetch();
+    let timeDif = '';
+    //console.dir(currentTime);
+    loop();
+
 
     function loop() {
         console.log('Initiate search');
@@ -101,11 +104,6 @@ async function createListOfMembers(Interaction){
     }
 
 
-    /*await Interaction.reply(
-        members.forEach(members => {
-            console.log(members);
-        })
-    );*/
 }
 
 function saveDataToFile(dataObject){
