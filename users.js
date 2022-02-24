@@ -1,12 +1,12 @@
 const { Presence } = require('discord.js');
-const { returnDate } = require('./musicStats.js');
+const { returnDate, getMonth } = require('./musicStats.js');
 const musicStats = require('./musicStats.js');
 const fs = require('fs'); // Needed for folders
 const path = require('path');
+const { getFilepath } = require('./folderStructure.js');
 
 let memberList = [];
 let songList = [];
-const folderName = 'Data'
 
 module.exports = {
 
@@ -29,6 +29,7 @@ module.exports = {
 
 
     memberList.push(addUser);
+    
 
     console.dir('--------------ADD-------------');
     console.dir(addUser.user.username);
@@ -107,16 +108,21 @@ function checkForMembersActivity(memberList){
 }
 
 function saveDataToFile(dataObject){
-    fs.writeFile(path.join(__dirname, 'Data', musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
+    createFolder();
+
+    fs.writeFile(path.join(__dirname, getFilepath(), musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
 }
 
 function createFolder(){
-   
     try {
-        if (!fs.existsSync(folderName)) {
-          fs.mkdirSync(folderName)
+        if (!fs.existsSync(getFilepath())) {
+          fs.mkdirSync(getFilepath(), {recursive: true})
         }
       } catch (err) {
         console.error(err)
     }
+
+}
+
+function createMonthFolders(){
 }
