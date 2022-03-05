@@ -4,6 +4,7 @@ const musicStats = require('./musicStats.js');
 const fs = require('fs'); // Needed for folders
 const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
+const { displayMusicTierList } = require('./showResults.js');
 
 let memberList = [];
 let songList = [];
@@ -19,6 +20,9 @@ module.exports = {
 
     if(commandName === 'initiate'){
         await checkForMembersActivity(memberList);
+    };
+    if(commandName === 'showresult'){
+        await displayMusicTierList();
     }
    },
 
@@ -27,9 +31,7 @@ module.exports = {
     const guild = await newPresence.client.guilds.fetch('271314305822097409');
     const addUser = await guild.members.fetch(newPresence.userId);
 
-
     memberList.push(addUser);
-    
 
     console.dir('--------------ADD-------------');
     console.dir(addUser.user.username);
@@ -51,8 +53,6 @@ module.exports = {
     },
 
     userInList: async function (newPresence) {
-
-        
         const guild = await newPresence.client.guilds.fetch('271314305822097409');
         const addUser = await guild.members.fetch(newPresence.userId);
         console.log(addUser);
@@ -65,10 +65,7 @@ module.exports = {
             return true;
         }
     }
-
-
 }
-
 
 function checkForMembersActivity(memberList){
     let date = new Date();
@@ -77,7 +74,6 @@ function checkForMembersActivity(memberList){
     let timeDif = '';
     //console.dir(currentTime);
     loop();
-
 
     function loop() {
         console.log('Initiate search');
