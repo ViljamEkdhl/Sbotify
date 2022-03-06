@@ -4,7 +4,7 @@ const musicStats = require('./musicStats.js');
 const fs = require('fs'); // Needed for folders
 const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
-const { displayMusicTierList } = require('./showResults.js');
+const { displayMusicTierList, changeRatio } = require('./showResults.js');
 
 let memberList = [];
 let songList = [];
@@ -22,7 +22,12 @@ module.exports = {
         await checkForMembersActivity(memberList);
     };
     if(commandName === 'showresult'){
-        await displayMusicTierList();
+        console.log(Interaction.options.getString('settings'));
+        if (changeRatio(Interaction) === false){
+            await Interaction.reply('Unable to change setting due to it already being the active setting!');
+        }else{
+            await Interaction.reply('Setting was successfully changed!');
+        }
     }
    },
 
