@@ -57,6 +57,7 @@ module.exports = {
 
     },
 
+    //checks if user is in the list
     userInList: async function (newPresence) {
         const guild = await newPresence.client.guilds.fetch('271314305822097409');
         const addUser = await guild.members.fetch(newPresence.userId);

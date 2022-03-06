@@ -1,6 +1,7 @@
 const fs = require('fs');
 const musicStats = require('./musicStats.js');
 const { getFilepath } = require('./folderStructure.js');
+const cron = require('node-cron');
 var resultRatio;
 
 module.exports = {
@@ -20,6 +21,22 @@ module.exports = {
             return false;
         }else{
             resultRatio = Interaction.options.getString('settings');
+
+            if(resultRatio === 'result_monthly'){
+                cron.schedule('0 0 1 * *', function() {
+                    console.log('running a task every minute');
+                });
+            }
+            if(resultRatio === 'result_weekly'){
+                cron.schedule('0 0 1 * *', function() {
+                    //Doesn't do anything atm
+                });
+            }
+            if(resultRatio === 'result_biweekly'){
+                cron.schedule('0 0 1 * *', function() {
+                    //Doesn't do anything atm
+                });
+            }
             return true;
         }
 
