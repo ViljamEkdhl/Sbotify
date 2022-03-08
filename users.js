@@ -111,7 +111,7 @@ function checkForMembersActivity(memberList){
 
 function saveDataToFile(dataObject){
     createFolder();
-
+    //Sparar just nu ner hela låtlistan oavsätt om det byter till en ny dag! FIXA DETTA
     fs.writeFile(path.join(__dirname, getFilepath(), musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
 }
 

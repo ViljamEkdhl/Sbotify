@@ -28,14 +28,18 @@ module.exports = {
                 });
             }
             if(resultRatio === 'result_weekly'){
-                cron.schedule('0 0 1 * *', function() {
+                cron.schedule('0 0 0 0 5', function() {
                     //Doesn't do anything atm
                 });
             }
             if(resultRatio === 'result_biweekly'){
-                cron.schedule('0 0 1 * *', function() {
+                cron.schedule('0 0 14 * *', function() {
                     //Doesn't do anything atm
                 });
+                cron.schedule('0 0 28 * *', function() {
+                    //Doesn't do anything atm
+                });
+
             }
             return true;
         }
