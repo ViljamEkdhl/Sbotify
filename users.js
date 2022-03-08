@@ -6,8 +6,8 @@ const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
 const { displayMusicTierList, changeRatio } = require('./showResults.js');
 
-let memberList = [];
-let songList = [];
+let memberList = []; //list of all the members currently listening to spotify
+let songList = []; //list of all the songs
 
 module.exports = {
 
@@ -83,6 +83,7 @@ function checkForMembersActivity(memberList){
 
     function loop() {
         console.log('Initiate search');
+        console.log(getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json');
         memberList.forEach(member => {
             console.log(member.presence.activities[0]);
             const activity = member.presence.activities.find(element => element.name === 'Spotify');
@@ -110,15 +111,25 @@ function checkForMembersActivity(memberList){
 }
 
 function saveDataToFile(dataObject){
-    createFolder();
-    //Sparar just nu ner hela låtlistan oavsätt om det byter till en ny dag! FIXA DETTA
+    createFolder(dataObject);
+
+    console.log(getFilepath().toString() + musicStats.getDate().toString() + '.json');
+    if(!fs.existsSync(getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json')){
+        console.log('DATAOBJECT SIZE');
+        console.log(dataObject.length);
+        dataObject.splice(0, dataObject.length);
+    }
+ 
     fs.writeFile(path.join(__dirname, getFilepath(), musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
+
+    //Sparar just nu ner hela låtlistan oavsätt om det byter till en ny dag! FIXA DETTA
+
 }
 
 function createFolder(){
     try {
         if (!fs.existsSync(getFilepath())) {
-          fs.mkdirSync(getFilepath(), {recursive: true})
+            fs.mkdirSync(getFilepath(), {recursive: true})
         }
       } catch (err) {
         console.error(err)
