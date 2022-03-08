@@ -111,10 +111,10 @@ function checkForMembersActivity(memberList){
 }
 
 function saveDataToFile(dataObject){
-    createFolder(dataObject);
+    createFolder();
 
     console.log(getFilepath().toString() + musicStats.getDate().toString() + '.json');
-    if(!fs.existsSync(getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json')){
+    if(!fs.existsSync('./' + getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json')){
         console.log('DATAOBJECT SIZE');
         console.log(dataObject.length);
         dataObject.splice(0, dataObject.length);
