@@ -5,6 +5,7 @@ const fs = require('fs'); // Needed for folders
 const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
 const { displayMusicTierList, changeRatio } = require('./showResults.js');
+const showResults = require('./showResults.js');
 
 let memberList = []; //list of all the members currently listening to spotify
 let songList = []; //list of all the songs
@@ -20,6 +21,7 @@ module.exports = {
 
     if(commandName === 'initiate'){
         await checkForMembersActivity(memberList);
+        showResults.displayMusicTierList(); // move this to show result because theres not meant to be an initiate command.
     };
     if(commandName === 'showresult'){
         console.log(Interaction.options.getString('settings'));

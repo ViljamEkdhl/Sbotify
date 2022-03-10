@@ -6,10 +6,19 @@ var resultRatio;
 
 module.exports = {
 
+    //Creates a array with all the data from the last month and displays it on the server
     displayMusicTierList: function (){
-        var test = fs.readFileSync(getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json').toString();
-        var tierList = JSON.parse(test);
-        console.log(tierList);
+        let dirname = getFilepath().toString();
+        let unfilteredData = [];
+        const filenames = fs.readdirSync(dirname);
+
+        filenames.forEach(file => {
+            var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
+            unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+            
+        })
+        //console.log(unfilteredData);
+        filterMusicList(unfilteredData);
     },
 
     //This function changes the intervalls for the music top 10 list.
@@ -24,6 +33,7 @@ module.exports = {
 
             if(resultRatio === 'result_monthly'){
                 cron.schedule('0 0 1 * *', function() {
+                    displayMusicTierList();
                     console.log('running a task every minute');
                 });
             }
@@ -45,4 +55,25 @@ module.exports = {
         }
 
     },
+}
+
+//Filters the music by checking at the startTime for every object in the array
+//
+async function filterMusicList(listToBeSorted){
+    /*let uniqueStartTime = [... new Set(listToBeSorted)];
+    console.log(uniqueStartTime);*/
+    const uniqueIds = [];
+
+    const unique = listToBeSorted.filter(element => {
+        const isDuplicate = uniqueIds.includes(element.startTime);
+        //console.log(isDuplicate);
+
+        if (!isDuplicate) {
+        uniqueIds.push(element.startTime);
+
+        return true;
+        }
+        
+    });
+    console.log(unique);
 }
