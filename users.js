@@ -102,7 +102,7 @@ function checkForMembersActivity(memberList){
             console.dir(timeDif);
             songList.push(songInformation);
             saveDataToFile(songList);
-            //musicStats.addSongToStats(songInformation);
+
         });
         setTimeout(() => {loop();}, 60000);// körs varje minut.
 
@@ -114,18 +114,14 @@ function checkForMembersActivity(memberList){
 
 function saveDataToFile(dataObject){
     createFolder();
-
-    console.log(getFilepath().toString() + musicStats.getDate().toString() + '.json');
+    //If the file doesn't exist splice the array containing all songs to start fresh on a new day
     if(!fs.existsSync('./' + getFilepath().toString() + '/' + musicStats.getDate().toString() + '.json')){
         console.log('DATAOBJECT SIZE');
         console.log(dataObject.length);
         dataObject.splice(0, dataObject.length);
+        dataObject.push('[]');
     }
- 
     fs.writeFile(path.join(__dirname, getFilepath(), musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
-
-    //Sparar just nu ner hela låtlistan oavsätt om det byter till en ny dag! FIXA DETTA
-
 }
 
 function createFolder(){
@@ -136,8 +132,4 @@ function createFolder(){
       } catch (err) {
         console.error(err)
     }
-
-}
-
-function createMonthFolders(){
 }

@@ -2,6 +2,7 @@ const fs = require('fs');
 const musicStats = require('./musicStats.js');
 const { getFilepath } = require('./folderStructure.js');
 const cron = require('node-cron');
+const { count } = require('console');
 var resultRatio;
 
 module.exports = {
@@ -15,10 +16,12 @@ module.exports = {
         filenames.forEach(file => {
             var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
             unfilteredData = unfilteredData.concat(JSON.parse(readFile));
-            
-        })
-        //console.log(unfilteredData);
-        filterMusicList(unfilteredData);
+
+        });
+        //console.dir(JSON.stringify(unfilteredData));
+        const filteredList = filterMusicList(unfilteredData);
+        //console.dir(filteredList);
+        composeTopTenList(filteredList);
     },
 
     //This function changes the intervalls for the music top 10 list.
@@ -58,15 +61,11 @@ module.exports = {
 }
 
 //Filters the music by checking at the startTime for every object in the array
-//
-async function filterMusicList(listToBeSorted){
-    /*let uniqueStartTime = [... new Set(listToBeSorted)];
-    console.log(uniqueStartTime);*/
+function filterMusicList(listToBeSorted){
     const uniqueIds = [];
 
     const unique = listToBeSorted.filter(element => {
         const isDuplicate = uniqueIds.includes(element.startTime);
-        //console.log(isDuplicate);
 
         if (!isDuplicate) {
         uniqueIds.push(element.startTime);
@@ -75,5 +74,43 @@ async function filterMusicList(listToBeSorted){
         }
         
     });
-    console.log(unique);
+    //console.log(unique);
+    return unique;
+}
+/**
+ * 
+ * @param {any[]} sortedList 
+ */
+function composeTopTenList(sortedList){
+    const topTen = [];
+    //console.log(sortedList);
+
+    for (const song of sortedList) {
+        const isDuplicate = topTen.findIndex(object => {
+            return object.songName === song.songName;
+        }); 
+        console.dir(isDuplicate);
+
+        if(isDuplicate === -1){
+            topTen.push({
+                songName: song.songName,
+                artist: song.artist,
+                startTime: song.startTime,
+                count: 1
+            })
+        }else{
+            const index = topTen.findIndex(object => {
+                return object.songName === song.songName;
+            }); 
+              
+            if (index !== -1) {
+                topTen[index].count = topTen[index].count + 1 ;
+            }
+        }
+
+    }
+    topTen.sort((b,a) =>  a.count-b.count);
+    topTen.splice(10, topTen.length);
+    console.log(topTen);
+
 }
