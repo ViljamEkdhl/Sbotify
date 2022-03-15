@@ -1,10 +1,12 @@
 const { getMonth, getYear } = require("./musicStats")
 
-const folderName = 'Data/'
+let folderName = 'Data/'
 
 module.exports = {
-  getFilepath: function (){
-    return folderName + getYear() + '/' + getMonth();
+getFilepath: function (guildId){
+  console.log('---1-----');
+  //console.log(guildId);
+  return folderName +  guildId + '/' + getYear() + '/' + getMonth();
 },
 
 }

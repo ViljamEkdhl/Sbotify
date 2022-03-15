@@ -29,8 +29,8 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
 
 	newPresence.activities.forEach(async function (activity) {
 		
-		console.log(activity.name);
-		console.log('----------');
+		//console.log(activity.name);
+		//console.log('----------');
 		if(activity.name === 'Spotify' && await users.userInList(newPresence) === false){
 			users.addUserToList(newPresence);
 		}
@@ -39,12 +39,6 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
 	if(newPresence.activities.find(element => element.name === 'Spotify') === undefined && await users.userInList(newPresence) === true){
 		users.removeUserFromList(newPresence);
 	}
-	/*if(newPresence.activities.length > 0 && (newPresence.activities[0].name === 'Spotify' || newPresence.activities[1].name === 'Spotify')){
-		users.addUserToList(newPresence);
-	}else{
-		users.removeUserFromList(newPresence);
-	}*/
-	//console.log('-------------------------------------------------------------------------------');
 });
 
 
