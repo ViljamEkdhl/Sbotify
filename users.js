@@ -22,14 +22,6 @@ module.exports = {
     const { commandName } = Interaction;
 
     if(commandName === 'initiate'){
-        if(!guildMap.has(Interaction.guildId)){
-            guildMap.set(Interaction.guildId, [])
-            console.log(guildMap);
-        }
-        await checkForMembersActivity(guildMap.get(Interaction.guildId));
-
-        await Interaction.reply('Initiate!');
-        //showResults.displayMusicTierList(); // move this to show result because theres not meant to be an initiate command.
     };
     if(commandName === 'showresult'){
         //console.log(Interaction);
@@ -47,43 +39,42 @@ module.exports = {
     const guild = await newPresence.client.guilds.fetch(newPresence.guild.id);
     const addUser = await guild.members.fetch(newPresence.userId);
 
-    /*console.dir(guild.id);
-    console.dir(guildMap.get(guild.id));
-    console.dir(addUser);*/
+    memberList.push(addUser);
 
-    if(guildMap.has(guild.id)){
+
+    /*if(guildMap.has(guild.id)){
         let temp = guildMap.get(guild.id);
     
         console.dir('--------------ADD-------------');
         temp.push(addUser);
         console.dir('-----' + guild.id + '---------CURRENT SIZE = ' + temp.length + '------' + addUser.user.username + '-------');
         guildMap.set(guild.id, temp);
-    }
+    }*/
 
-    /*console.dir('--------------ADD-------------');
+    console.dir('--------------ADD-------------');
     console.dir(addUser.user.username);
     console.dir('--------------ADD DONE-------------');
-    console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');*/
+    console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');
     },
 
     removeUserFromList: async function (newPresence){
         const guild = await newPresence.client.guilds.fetch(newPresence.guild.id);
 
         const removeUser = await guild.members.fetch(newPresence.userId);
-        let index = '';
-        //memberList.splice(index, 1);
+        const index = memberList.indexOf(removeUser);
+        memberList.splice(index, 1);
 
-        if(guildMap.has(guild.id)){
+        /*if(guildMap.has(guild.id)){
             let temp = guildMap.get(guild.id);
             index = temp.indexOf(removeUser);;
             temp.splice(index, 1);
             console.dir('------' + guild.id + '--------CURRENT SIZE = ' + temp.length + '------' + removeUser.user.username + '-------');
-        }
+        }*/
 
-        /*console.dir('------------REMOVE-------------');
+        console.dir('------------REMOVE-------------');
         console.dir(removeUser.user.username);
         console.dir('------------REMOVE DONE-------------');
-        console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');*/
+        console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');
 
     },
 
@@ -94,12 +85,12 @@ module.exports = {
         console.log('------------------------------------------------');
         const guild = await newPresence.client.guilds.fetch(newPresence.guild.id);
         const addUser = await guild.members.fetch(newPresence.userId);
-        let index = '';
+        let index = memberList.indexOf(addUser);
 
-        if(guildMap.has(guild.id)){
+        /*if(guildMap.has(guild.id)){
             let temp = guildMap.get(guild.id);
             index = temp.indexOf(addUser);
-        }
+        }*/
 
 
 
@@ -108,6 +99,18 @@ module.exports = {
         }else{
             return true;
         }
+    },
+
+    initiate: async function(guilds){
+
+        for(const key of guilds.keys())
+        if(!guildMap.has(key)){
+            guildMap.set(key, [])
+        }
+        console.log(guildMap);
+        await checkForMembersActivity(memberList);
+
+        //showResults.displayMusicTierList(); // move this to show result because theres not meant to be an initiate command.
     }
 }
 
@@ -135,8 +138,14 @@ function checkForMembersActivity(memberList){
         
             timeDif = activity.timestamps.end.getHours() + ':' + activity.timestamps.end.getMinutes();
             console.dir(timeDif);
-            songList.push(songInformation);
-            saveDataToFile(songList, member.guild.id);
+
+            if(guildMap.has(member.guild.id)){
+                let temp = guildMap.get(member.guild.id);
+                console.dir(temp);
+                temp.push(songInformation);
+                saveDataToFile(temp, member.guild.id);
+            }
+
 
         });
         setTimeout(() => {loop();}, 60000);// körs varje minut.

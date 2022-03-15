@@ -11,6 +11,14 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
 	console.log('Ready!');
+	//console.log(users);
+	//users.initiate(client);
+});
+
+client.on('ready', () => {
+	client.user.setActivity(`on ${client.guilds.cache.size} servers`);
+	console.log(`Ready to serve on ${client.guilds.cache.size} servers, for ${client.users.cache.size} users.`);
+	users.initiate(client.guilds.cache);
 });
 
 
