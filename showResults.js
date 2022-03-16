@@ -3,35 +3,44 @@ const musicStats = require('./musicStats.js');
 const { getFilepath } = require('./folderStructure.js');
 const cron = require('node-cron');
 const { count } = require('console');
+const users = require('./users.js');
 var resultRatio;
 
 module.exports = {
 
     //Creates a array with all the data from the last month and displays it on the server
     displayMusicTierList: function (){
-        let dirname = getFilepath().toString();
-        let unfilteredData = [];
-        const filenames = fs.readdirSync(dirname);
+        let guildMap = users.getGuildMap();
+        for(const key of guildMap){
 
-        filenames.forEach(file => {
-            var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
-            unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+            let dirname = getFilepath(key).toString();
+            let unfilteredData = [];
+            const filenames = fs.readdirSync(dirname);
+    
+            filenames.forEach(file => {
+                var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
+                unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+    
+            });
+            //console.dir(JSON.stringify(unfilteredData));
+            const filteredList = filterMusicList(unfilteredData);
+            //console.dir(filteredList);
+            composeTopTenList(filteredList);
+            
+        }
 
-        });
-        //console.dir(JSON.stringify(unfilteredData));
-        const filteredList = filterMusicList(unfilteredData);
-        //console.dir(filteredList);
-        composeTopTenList(filteredList);
+
     },
 
     //This function changes the intervalls for the music top 10 list.
     //So far you can only pick Weekly, BiWeely and Monthly
     //Returning true means that the change was successfull and false means that the change wasn't possible.
     changeRatio: function (Interaction){
-         
-        if(Interaction.options.getString('settings') === resultRatio){
+         console.log(Interaction);
+            if(Interaction.options.getString('settings') === resultRatio){
             return false;
-        }else{
+            }
+        else{
             resultRatio = Interaction.options.getString('settings');
 
             if(resultRatio === 'result_monthly'){

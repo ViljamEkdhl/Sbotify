@@ -5,7 +5,6 @@ const fs = require('fs'); // Needed for folders
 const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
 const { displayMusicTierList, changeRatio } = require('./showResults.js');
-const showResults = require('./showResults.js');
 const folderStructure = require('./folderStructure.js');
 
 const guildMap = new Map();
@@ -41,16 +40,6 @@ module.exports = {
 
     memberList.push(addUser);
 
-
-    /*if(guildMap.has(guild.id)){
-        let temp = guildMap.get(guild.id);
-    
-        console.dir('--------------ADD-------------');
-        temp.push(addUser);
-        console.dir('-----' + guild.id + '---------CURRENT SIZE = ' + temp.length + '------' + addUser.user.username + '-------');
-        guildMap.set(guild.id, temp);
-    }*/
-
     console.dir('--------------ADD-------------');
     console.dir(addUser.user.username);
     console.dir('--------------ADD DONE-------------');
@@ -63,13 +52,6 @@ module.exports = {
         const removeUser = await guild.members.fetch(newPresence.userId);
         const index = memberList.indexOf(removeUser);
         memberList.splice(index, 1);
-
-        /*if(guildMap.has(guild.id)){
-            let temp = guildMap.get(guild.id);
-            index = temp.indexOf(removeUser);;
-            temp.splice(index, 1);
-            console.dir('------' + guild.id + '--------CURRENT SIZE = ' + temp.length + '------' + removeUser.user.username + '-------');
-        }*/
 
         console.dir('------------REMOVE-------------');
         console.dir(removeUser.user.username);
@@ -87,13 +69,6 @@ module.exports = {
         const addUser = await guild.members.fetch(newPresence.userId);
         let index = memberList.indexOf(addUser);
 
-        /*if(guildMap.has(guild.id)){
-            let temp = guildMap.get(guild.id);
-            index = temp.indexOf(addUser);
-        }*/
-
-
-
         if(index === -1){
             return false;
         }else{
@@ -103,14 +78,19 @@ module.exports = {
 
     initiate: async function(guilds){
 
-        for(const key of guilds.keys())
-        if(!guildMap.has(key)){
-            guildMap.set(key, [])
+        for(const key of guilds.keys()){
+            if(!guildMap.has(key)){
+                guildMap.set(key, [])
+            }
         }
         console.log(guildMap);
         await checkForMembersActivity(memberList);
 
-        //showResults.displayMusicTierList(); // move this to show result because theres not meant to be an initiate command.
+    
+    },
+
+    getGuildMap: function(){
+        return guildMap;
     }
 }
 
@@ -125,7 +105,6 @@ function checkForMembersActivity(memberList){
 
         memberList.forEach(member => {
             console.log(member.presence.activities[0]);
-            //console.log(getFilepath(member.guild.id).toString() + '/' + musicStats.getDate().toString() + '.json');
             const activity = member.presence.activities.find(element => element.name === 'Spotify');
         
             const songInformation = {
@@ -146,13 +125,9 @@ function checkForMembersActivity(memberList){
                 saveDataToFile(temp, member.guild.id);
             }
 
-
         });
         setTimeout(() => {loop();}, 60000);// körs varje minut.
-
     }
-
-
 }
 
 function saveDataToFile(dataObject, guildId){
