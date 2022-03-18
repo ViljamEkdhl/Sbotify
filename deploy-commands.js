@@ -11,9 +11,9 @@ const commands = [
 		option.setName('settings')
 		.setDescription('How often do you want the bot to display the tierlist?')
 		.setRequired(true)
-		.addChoice('Weekly', 'result_weekly')
-		.addChoice('BiWeekly', 'result_biweekly')
 		.addChoice('Monthly', 'result_monthly')
+		//.addChoice('Weekly', 'result_weekly')
+		//.addChoice('BiWeekly', 'result_biweekly')
 	),
 ]
 	.map(command => command.toJSON());

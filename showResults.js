@@ -10,7 +10,7 @@ var resultRatio;
 module.exports = {
 
     //Creates a array with all the data from the last month and displays it on the server
-    displayMusicTierList: function (client) {
+    displayMusicTierList: async function (client) {
         let guildMap = users.getGuildMap();
         for (const key of guildMap) {
     
@@ -26,9 +26,14 @@ module.exports = {
             //console.dir(JSON.stringify(unfilteredData));
             const filteredList = filterMusicList(unfilteredData);
             //console.dir(filteredList);
-            composeTopTenList(filteredList);
-            const channel = client.channels.cache.get('879506044554981426');
-            channel.send('test');
+            const list = composeTopTenList(filteredList);
+            //WORK IN PROGRESS
+            const channel = await client.channels.cache.get('879506044554981426');
+            console.log(list);
+            list.forEach(async list => {
+                await channel.send(list.songName);
+            });
+            
 
         }
 
@@ -52,7 +57,7 @@ module.exports = {
                     console.log('running a task every minute');
                 });
             }
-            if (resultRatio === 'result_weekly') {
+            /*if (resultRatio === 'result_weekly') {
                 cron.schedule('0 0 0 0 5', function () {
                     //Doesn't do anything atm
                 });
@@ -65,7 +70,7 @@ module.exports = {
                     //Doesn't do anything atm
                 });
 
-            }
+            }*/
             return true;
         }
 
@@ -123,6 +128,7 @@ function composeTopTenList(sortedList) {
     }
     topTen.sort((b, a) => a.count - b.count);
     topTen.splice(10, topTen.length);
+    return topTen;
     console.log(topTen);
 
 }
