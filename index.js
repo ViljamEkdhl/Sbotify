@@ -4,9 +4,11 @@ const users = require('./users.js');
 const { Client, Intents, Presence } = require('discord.js');
 const { token } = require('./config.json');
 const { userInList, addUserToList } = require('./users.js');
+const commands = require('./commands.js');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES] });
+
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
@@ -21,8 +23,16 @@ client.on('ready', () => {
 
 
 client.on('interactionCreate', async Interaction =>{
-	users.validateCommand(Interaction);
+	/*const channel = client.channels.cache.get('834009668493639742');
+	channel.send('test');*/
+
+	commands.validateCommand(Interaction, client);
 });
+
+client.on('guildMemberRemove', () =>{
+	//Might implement if it shows up that it brakes if bot leaves server
+	console.log('TESTESTTEESTSETSETSETSETSETSE');
+})
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
 	newPresence.activities.forEach(async function (activity) {

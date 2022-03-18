@@ -4,7 +4,6 @@ let folderName = 'Data/'
 
 module.exports = {
 getFilepath: function (guildId){
-  console.log('---1-----');
   //console.log(guildId);
   return folderName +  guildId + '/' + getYear() + '/' + getMonth();
 },

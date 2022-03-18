@@ -4,16 +4,17 @@ const { getFilepath } = require('./folderStructure.js');
 const cron = require('node-cron');
 const { count } = require('console');
 const users = require('./users.js');
+const client = require('./index.js');
 var resultRatio;
 
 module.exports = {
 
     //Creates a array with all the data from the last month and displays it on the server
-    displayMusicTierList: function () {
+    displayMusicTierList: function (client) {
         let guildMap = users.getGuildMap();
         for (const key of guildMap) {
-
-            let dirname = getFilepath(key).toString();
+    
+            let dirname = getFilepath(key[0]).toString();
             let unfilteredData = [];
             const filenames = fs.readdirSync(dirname);
 
@@ -26,6 +27,8 @@ module.exports = {
             const filteredList = filterMusicList(unfilteredData);
             //console.dir(filteredList);
             composeTopTenList(filteredList);
+            const channel = client.channels.cache.get('879506044554981426');
+            channel.send('test');
 
         }
 
