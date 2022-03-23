@@ -1,4 +1,4 @@
-const showResults = require('./showResults.js');
+//const showResults = require('./showResults.js');
 const { changeRatio } = require('./showResults.js');
 
 module.exports = {
@@ -10,13 +10,17 @@ module.exports = {
     const { commandName } = Interaction;
 
     if(commandName === 'initiate'){
-        await showResults.displayMusicTierList(client);
+        //await showResults.displayMusicTierList(client);
     };
     if(commandName === 'showresult'){
+        const channel = Interaction.options.getChannel('destination');
+        const setting = Interaction.options.getString('settings');
         //console.log(Interaction);
-        if (changeRatio(Interaction) === false){
+        if (await changeRatio(Interaction, channel) === false){
             await Interaction.reply('Unable to change setting due to it already being the active setting!');
         }else{
+            console.log(channel);
+            //await showResults.displayMusicTierList(channel);
             await Interaction.reply('Setting was successfully changed!');
         }
     }

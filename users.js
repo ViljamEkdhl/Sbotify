@@ -8,7 +8,7 @@ const folderStructure = require('./folderStructure.js');
 
 const guildMap = new Map();
 let memberList = []; //list of all the members currently listening to spotify
-let songList = []; //list of all the songs
+//let songList = []; //list of all the songs
 
 module.exports = {
    //Creates a list of users that is on the specific guild
@@ -73,7 +73,7 @@ module.exports = {
 
         for(const key of guilds.keys()){
             if(!guildMap.has(key)){
-                guildMap.set(key, [])
+                guildMap.set(key, {songList: [], guildChannel: ''})
             }
         }
         console.log(guildMap);
@@ -97,6 +97,7 @@ function checkForMembersActivity(memberList){
 
     function loop() {
         console.log('Initiate search');
+        console.dir(guildMap);
 
         memberList.forEach(member => {
             
@@ -116,15 +117,15 @@ function checkForMembersActivity(memberList){
             console.dir(timeDif);
 
             if(guildMap.has(member.guild.id) === false){
-                guildMap.set(member.guild.id, []);
+                guildMap.set(member.guild.id, {songList: [], guildChannel: ''});
                 console.log('ADDING NEW SERVER TO guildMAP');
-                console.log(guildMap);
+                //console.log(guildMap);
             }
 
             if(guildMap.has(member.guild.id)){
                 let temp = guildMap.get(member.guild.id);
                 //console.dir(temp);
-                temp.push(songInformation);
+                temp.songList.push(songInformation);
                 saveDataToFile(temp, member.guild.id);
             }
         } catch (error) {

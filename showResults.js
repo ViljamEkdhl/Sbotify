@@ -9,51 +9,21 @@ var resultRatio;
 
 module.exports = {
 
-    //Creates a array with all the data from the last month and displays it on the server
-    displayMusicTierList: async function (client) {
-        let guildMap = users.getGuildMap();
-        for (const key of guildMap) {
-    
-            let dirname = getFilepath(key[0]).toString();
-            let unfilteredData = [];
-            const filenames = fs.readdirSync(dirname);
-
-            filenames.forEach(file => {
-                var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
-                unfilteredData = unfilteredData.concat(JSON.parse(readFile));
-
-            });
-            //console.dir(JSON.stringify(unfilteredData));
-            const filteredList = filterMusicList(unfilteredData);
-            //console.dir(filteredList);
-            const list = composeTopTenList(filteredList);
-            //WORK IN PROGRESS
-            const channel = await client.channels.cache.get('879506044554981426');
-            console.log(list);
-            list.forEach(async list => {
-                await channel.send('Song: ' + list.songName + ' ' + 'Times played: ' + list.count);
-            });
-            
-
-        }
-
-
-    },
-
     //This function changes the intervalls for the music top 10 list.
     //So far you can only pick Weekly, BiWeely and Monthly
     //Returning true means that the change was successfull and false means that the change wasn't possible.
-    changeRatio: function (Interaction) {
-        console.log(Interaction);
+    changeRatio: async function (Interaction, channel) {
+        //console.log(Interaction);
         if (Interaction.options.getString('settings') === resultRatio) {
             return false;
         }
         else {
             resultRatio = Interaction.options.getString('settings');
+            await displayMusicTierList(channel);
 
             if (resultRatio === 'result_monthly') {
                 cron.schedule('0 0 1 * *', function () {
-                    displayMusicTierList();
+                    displayMusicTierList(client, channel);
                     console.log('running a task every minute');
                 });
             }
@@ -77,6 +47,48 @@ module.exports = {
     },
 }
 
+    //Creates a array with all the data from the last month and displays it on the server
+    async function displayMusicTierList (channel) {
+        let guildMap = users.getGuildMap();
+        for (const key of guildMap) {
+    
+            console.dir(channel);
+            if(channel.guildId  === key[0]){
+                key[1].guildChannel = channel.id;
+            }
+            let dirname = getFilepath(key[0]).toString();
+            //console.log(key);
+            let unfilteredData = [];
+            const filenames = fs.readdirSync(dirname);
+
+            filenames.forEach(file => {
+                var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
+                unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+
+            });
+
+            const filteredList = filterMusicList(unfilteredData);
+
+            const list = composeTopTenList(filteredList);
+            //WORK IN PROGRESS
+            //const channel = await client.channels.cache.get('879506044554981426');
+            //console.log(list);
+
+            if(channel.guildId === key[0]){
+                await channel.send('Top ten list for: ' + channel.guild.name);
+                let test = ' ';
+                list.forEach(async list => {
+                    //await channel.send('Song: ' + list.songName + ' - ' + 'Times played: ' + list.count);
+                    test = test + 'Song: ' + list.songName + ' - ' + 'Times played: ' + list.count  + '\n';
+                });
+                await channel.send(test);
+            }
+            
+
+        }
+
+
+    }
 //Filters the music by checking at the startTime for every object in the array
 function filterMusicList(listToBeSorted) {
     const uniqueIds = [];
@@ -106,7 +118,7 @@ function composeTopTenList(sortedList) {
         const isDuplicate = topTen.findIndex(object => {
             return object.songName === song.songName;
         });
-        console.dir(isDuplicate);
+        //console.dir(isDuplicate);
 
         if (isDuplicate === -1) {
             topTen.push({
@@ -129,6 +141,5 @@ function composeTopTenList(sortedList) {
     topTen.sort((b, a) => a.count - b.count);
     topTen.splice(10, topTen.length);
     return topTen;
-    console.log(topTen);
 
 }

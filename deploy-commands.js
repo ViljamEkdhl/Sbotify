@@ -14,6 +14,11 @@ const commands = [
 		.addChoice('Monthly', 'result_monthly')
 		//.addChoice('Weekly', 'result_weekly')
 		//.addChoice('BiWeekly', 'result_biweekly')
+	)
+	.addChannelOption(option => 
+		option.setName('destination')
+		.setDescription('Where do you want the bot to publish the tier-list?')
+		.setRequired(true)
 	),
 ]
 	.map(command => command.toJSON());
