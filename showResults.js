@@ -31,7 +31,7 @@ module.exports = {
             const channel = await client.channels.cache.get('879506044554981426');
             console.log(list);
             list.forEach(async list => {
-                await channel.send(list.songName);
+                await channel.send('Song: ' + list.songName + ' ' + 'Times played: ' + list.count);
             });
             
 

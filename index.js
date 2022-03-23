@@ -35,12 +35,14 @@ client.on('guildMemberRemove', () =>{
 })
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
+	const userIsInList = await users.userInList(newPresence);
+	
 	newPresence.activities.forEach(async function (activity) {
-		if(activity.name === 'Spotify' && await users.userInList(newPresence) === false){
+		if(activity.name === 'Spotify' && userIsInList === false){
 			users.addUserToList(newPresence);
 		}
 	});
-	if(newPresence.activities.find(element => element.name === 'Spotify') === undefined && await users.userInList(newPresence) === true){
+	if(newPresence.activities.find(element => element.name === 'Spotify') === undefined && userIsInList === true){
 		users.removeUserFromList(newPresence);
 	}
 });

@@ -30,12 +30,21 @@ module.exports = {
 
         const removeUser = await guild.members.fetch(newPresence.userId);
         const index = memberList.indexOf(removeUser);
-        memberList.splice(index, 1);
+        let userId = removeUser.user.id;
+        let guildId = removeUser.guild.id;
+        console.log(memberList.indexOf(removeUser));
 
-        console.dir('------------REMOVE-------------');
-        console.dir(removeUser.user.username);
-        console.dir('------------REMOVE DONE-------------');
-        console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');
+
+        for (let i = 0 ; i < memberList.length; i++) {
+            if (memberList[i].user.id === userId && memberList[i].guild.id === guildId) {
+                memberList.splice(i, 1);
+                console.dir('------------REMOVE-------------');
+                console.dir(removeUser.user.username);
+                console.dir('------------REMOVE DONE-------------');
+                console.dir('--------------CURRENT SIZE = ' + memberList.length + '-------------');
+                break;
+            }
+        }
 
     },
 
@@ -45,12 +54,19 @@ module.exports = {
         const guild = await newPresence.client.guilds.fetch(newPresence.guild.id);
         const addUser = await guild.members.fetch(newPresence.userId);
         let index = memberList.indexOf(addUser);
+        let userId = addUser.user.id;
+        let guildId = addUser.guild.id;
 
-        if(index === -1){
-            return false;
-        }else{
-            return true;
+        if(memberList.length === 0 ){return false};
+
+        for(const member of memberList){
+
+            if(member.user.id === userId && member.guild.id === guildId){
+                return true;
+            }
         }
+        return false;
+
     },
 
     initiate: async function(guilds){
