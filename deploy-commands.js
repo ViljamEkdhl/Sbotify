@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { Routes, ChannelType } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('./config.json');
 
 const commands = [
@@ -19,6 +19,7 @@ const commands = [
 		option.setName('destination')
 		.setDescription('Where do you want the bot to publish the tier-list?')
 		.setRequired(true)
+		.addChannelType(ChannelType.GuildText)
 	),
 ]
 	.map(command => command.toJSON());
@@ -26,7 +27,7 @@ const commands = [
 const rest = new REST({ version: '9' }).setToken(token);
 
 //Deploy on multiple servers
-/*(async () => {
+(async () => {
 	try {
 		console.log('Started refreshing application (/) commands.');
 
@@ -39,9 +40,9 @@ const rest = new REST({ version: '9' }).setToken(token);
 	} catch (error) {
 		console.error(error);
 	}
-})();*/
+})();
 
 //Deploy on single server
-rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+/*rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))
-	.catch(console.error);
+	.catch(console.error);*/

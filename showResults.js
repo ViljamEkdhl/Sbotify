@@ -5,7 +5,6 @@ const cron = require('node-cron');
 const { count } = require('console');
 const users = require('./users.js');
 const client = require('./index.js');
-var resultRatio;
 
 module.exports = {
 
@@ -14,35 +13,25 @@ module.exports = {
     //Returning true means that the change was successfull and false means that the change wasn't possible.
     changeRatio: async function (Interaction, channel) {
         //console.log(Interaction);
-        if (Interaction.options.getString('settings') === resultRatio) {
-            return false;
+        let guildMap = users.getGuildMap();
+        for(const key of guildMap){
+            if(key[0] === channel.guildId){
+                key[1].resultRatio = Interaction.options.getString('settings');
+    
+                if (key[1].resultRatio === 'result_monthly') {
+                    try {
+                        cron.stop;
+                    } catch (error) {
+                        
+                    }
+                    cron.schedule('* * * * *', async function () {
+                        await displayMusicTierList(channel);
+                        console.log('running a task every minute');
+                    });
+                }
+            }
         }
-        else {
-            resultRatio = Interaction.options.getString('settings');
-            await displayMusicTierList(channel);
-
-            if (resultRatio === 'result_monthly') {
-                cron.schedule('0 0 1 * *', function () {
-                    displayMusicTierList(client, channel);
-                    console.log('running a task every minute');
-                });
-            }
-            /*if (resultRatio === 'result_weekly') {
-                cron.schedule('0 0 0 0 5', function () {
-                    //Doesn't do anything atm
-                });
-            }
-            if (resultRatio === 'result_biweekly') {
-                cron.schedule('0 0 14 * *', function () {
-                    //Doesn't do anything atm
-                });
-                cron.schedule('0 0 28 * *', function () {
-                    //Doesn't do anything atm
-                });
-
-            }*/
             return true;
-        }
 
     },
 }
@@ -52,12 +41,11 @@ module.exports = {
         let guildMap = users.getGuildMap();
         for (const key of guildMap) {
     
-            console.dir(channel);
             if(channel.guildId  === key[0]){
                 key[1].guildChannel = channel.id;
             }
+
             let dirname = getFilepath(key[0]).toString();
-            //console.log(key);
             let unfilteredData = [];
             const filenames = fs.readdirSync(dirname);
 
@@ -67,12 +55,10 @@ module.exports = {
 
             });
 
+            console.dir(unfilteredData);
             const filteredList = filterMusicList(unfilteredData);
 
             const list = composeTopTenList(filteredList);
-            //WORK IN PROGRESS
-            //const channel = await client.channels.cache.get('879506044554981426');
-            //console.log(list);
 
             if(channel.guildId === key[0]){
                 await channel.send('Top ten list for: ' + channel.guild.name);

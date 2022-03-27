@@ -73,7 +73,7 @@ module.exports = {
 
         for(const key of guilds.keys()){
             if(!guildMap.has(key)){
-                guildMap.set(key, {songList: [], guildChannel: ''})
+                guildMap.set(key, {songList: [], guildChannel: '', resultRatio: ''})
             }
         }
         console.log(guildMap);
@@ -117,7 +117,7 @@ function checkForMembersActivity(memberList){
             console.dir(timeDif);
 
             if(guildMap.has(member.guild.id) === false){
-                guildMap.set(member.guild.id, {songList: [], guildChannel: ''});
+                guildMap.set(member.guild.id, {songList: [], guildChannel: '', resultRatio: ''});
                 console.log('ADDING NEW SERVER TO guildMAP');
                 //console.log(guildMap);
             }
@@ -144,10 +144,11 @@ function saveDataToFile(dataObject, guildId){
     console.log('------------------------------------------------');
     //If the file doesn't exist splice the array containing all songs to start fresh on a new day
     if(!fs.existsSync('./' + getFilepath(guildId).toString() + '/' + musicStats.getDate().toString() + '.json')){
-        dataObject.splice(0, dataObject.length);
+        console.log(dataObject);
+        dataObject.songList.splice(0, dataObject.length);
         //dataObject.push('[]');
     }
-    fs.writeFile(path.join(__dirname, getFilepath(guildId), musicStats.getDate() + '.json'), JSON.stringify(dataObject, null, 4), { flag: 'w+' }, err => {})
+    fs.writeFile(path.join(__dirname, getFilepath(guildId), musicStats.getDate() + '.json'), JSON.stringify(dataObject.songList, null, 4), { flag: 'w+' }, err => {})
 }
 
 function createFolder(guildId){
