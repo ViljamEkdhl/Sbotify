@@ -7,5 +7,9 @@ getFilepath: function (guildId){
   //console.log(guildId);
   return folderName +  guildId + '/' + getYear() + '/' + getMonth();
 },
+getFilepathLlastMonth: function (guildId){
+  //console.log(guildId);
+  return folderName +  guildId + '/' + getYear() + '/' + (getMonth() - 1);
+}
 
 }

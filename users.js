@@ -73,13 +73,16 @@ module.exports = {
 
         for(const key of guilds.keys()){
             if(!guildMap.has(key)){
-                guildMap.set(key, {songList: [], guildChannel: '', resultRatio: ''})
+                guildMap.set(key, {
+                    songList: [], 
+                    guildChannel: '', 
+                    resultRatio: '',
+                    cronJob: ''
+                })
             }
         }
         console.log(guildMap);
         await checkForMembersActivity(memberList);
-
-    
     },
 
     getGuildMap: function(){

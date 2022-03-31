@@ -1,6 +1,6 @@
 const fs = require('fs');
 const musicStats = require('./musicStats.js');
-const { getFilepath } = require('./folderStructure.js');
+const { getFilepath, getFilepathLlastMonth } = require('./folderStructure.js');
 const cron = require('node-cron');
 const { count } = require('console');
 const users = require('./users.js');
@@ -19,12 +19,12 @@ module.exports = {
                 key[1].resultRatio = Interaction.options.getString('settings');
     
                 if (key[1].resultRatio === 'result_monthly') {
-                    try {
-                        cron.stop;
-                    } catch (error) {
-                        
+
+                    if(key[1].cronJob != ''){
+                        key[1].cronJob.stop();
                     }
-                    cron.schedule('* * * * *', async function () {
+
+                    key[1].cronJob = cron.schedule('1 0 1 * *', async function () {
                         await displayMusicTierList(channel);
                         console.log('running a task every minute');
                     });
@@ -36,6 +36,10 @@ module.exports = {
     },
 }
 
+    function startCronJob(guildMap, key){
+
+    }
+
     //Creates a array with all the data from the last month and displays it on the server
     async function displayMusicTierList (channel) {
         let guildMap = users.getGuildMap();
@@ -45,7 +49,7 @@ module.exports = {
                 key[1].guildChannel = channel.id;
             }
 
-            let dirname = getFilepath(key[0]).toString();
+            let dirname = getFilepathLlastMonth(key[0]).toString();
             let unfilteredData = [];
             const filenames = fs.readdirSync(dirname);
 
