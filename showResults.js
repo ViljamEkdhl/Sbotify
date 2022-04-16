@@ -5,6 +5,8 @@ const cron = require('node-cron');
 const { count } = require('console');
 const users = require('./users.js');
 const client = require('./index.js');
+const Canvas = require('canvas');
+const { MessageAttachment } = require('discord.js');
 
 module.exports = {
 
@@ -24,7 +26,7 @@ module.exports = {
                         key[1].cronJob.stop();
                     }
 
-                    key[1].cronJob = cron.schedule('1 0 1 * *', async function () {
+                    key[1].cronJob = cron.schedule('34 21 5 * *', async function () {
                         await displayMusicTierList(channel);
                         console.log('running a task every minute');
                     });
@@ -35,10 +37,6 @@ module.exports = {
 
     },
 }
-
-    function startCronJob(guildMap, key){
-
-    }
 
     //Creates a array with all the data from the last month and displays it on the server
     async function displayMusicTierList (channel) {
@@ -59,7 +57,7 @@ module.exports = {
 
             });
 
-            console.dir(unfilteredData);
+            //console.dir(unfilteredData);
             const filteredList = filterMusicList(unfilteredData);
 
             const list = composeTopTenList(filteredList);
@@ -69,9 +67,11 @@ module.exports = {
                 let test = ' ';
                 list.forEach(async list => {
                     //await channel.send('Song: ' + list.songName + ' - ' + 'Times played: ' + list.count);
-                    test = test + 'Song: ' + list.songName + ' - ' + 'Times played: ' + list.count  + '\n';
+                    test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
                 });
-                await channel.send(test);
+                let canvas = await constructCanvas(list);
+                //console.dir(canvas);
+                await channel.send({ files: [canvas] });
             }
             
 
@@ -79,6 +79,37 @@ module.exports = {
 
 
     }
+
+async function constructCanvas(songList){
+    const canvas = Canvas.createCanvas(700, 700);
+    const context = canvas.getContext('2d');
+
+    const background = await Canvas.loadImage('./canvas.jpg');
+
+    // This uses the canvas dimensions to stretch the image onto the entire canvas
+    context.drawImage(background, 0, 0, canvas.width, canvas.height);
+    
+    context.strokeRect(0, 0, canvas.width, canvas.height);
+
+    // Select the font size and type from one of the natively available fonts
+    context.font = '30px sans-serif';
+
+    // Select the style that will be used to fill the text in
+    context.fillStyle = '#ffffff';
+
+    // Actually fill the text with a solid color
+    i = 660;
+    for(const item of songList){
+        console.log(item);
+        context.fillText(item.songName + ' - ' + 'Played: ' + item.count , canvas.width - 650, canvas.height - i);
+        i = i - 50;
+    }
+
+    // Use the helpful Attachment class structure to process the file for you
+    const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png');
+
+    return attachment;
+}
 //Filters the music by checking at the startTime for every object in the array
 function filterMusicList(listToBeSorted) {
     const uniqueIds = [];

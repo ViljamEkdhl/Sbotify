@@ -148,7 +148,8 @@ function saveDataToFile(dataObject, guildId){
     //If the file doesn't exist splice the array containing all songs to start fresh on a new day
     if(!fs.existsSync('./' + getFilepath(guildId).toString() + '/' + musicStats.getDate().toString() + '.json')){
         console.log(dataObject);
-        dataObject.songList.splice(0, dataObject.length);
+        //dataObject.songList.splice(0, dataObject.length);
+        dataObject.songList = new [];
         //dataObject.push('[]');
     }
     fs.writeFile(path.join(__dirname, getFilepath(guildId), musicStats.getDate() + '.json'), JSON.stringify(dataObject.songList, null, 4), { flag: 'w+' }, err => {})
