@@ -25,7 +25,7 @@ module.exports = {
 				guild.cronJob.stop();
 			}
 
-			guild.cronJob = cron.schedule("45 22 26 * *", async function () {
+			guild.cronJob = cron.schedule("1 0 1 * *", async function () {
                 console.log("cronjob ran " + channel.guildId);
 				await displayMusicTierList(guild.guildChannel);
 			},{
