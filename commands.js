@@ -21,7 +21,7 @@ module.exports = {
         if (await changeRatio(Interaction, channel) === false){
             await Interaction.reply('Unable to change setting due to it already being the active setting!');
         }else{
-            console.log(channel);
+            //console.log(channel);
             //await showResults.displayMusicTierList(channel);
             await Interaction.reply('Setting was successfully changed!');
         }

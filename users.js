@@ -99,13 +99,13 @@ function checkForMembersActivity(memberList){
 
 
     function loop() {
-        console.log('Initiate search');
-        console.dir(guildMap);
+        //console.log('Initiate search');
+        //console.dir(guildMap);
 
         memberList.forEach(member => {
             
         try {
-            console.log(member.presence.activities[0]);
+            //console.log(member.presence.activities[0]);
             const activity = member.presence.activities.find(element => element.name === 'Spotify');
         
             const songInformation = {
@@ -117,10 +117,10 @@ function checkForMembersActivity(memberList){
             }
         
             timeDif = activity.timestamps.end.getHours() + ':' + activity.timestamps.end.getMinutes();
-            console.dir(timeDif);
+            //console.dir(timeDif);
 
             if(guildMap.has(member.guild.id) === false){
-                guildMap.set(member.guild.id, {songList: [], guildChannel: '', resultRatio: ''});
+                guildMap.set(member.guild.id, {songList: [], guildChannel: '', resultRatio: '', cronJob: ''});
                 console.log('ADDING NEW SERVER TO guildMAP');
                 //console.log(guildMap);
             }
@@ -142,9 +142,7 @@ function checkForMembersActivity(memberList){
 
 function saveDataToFile(dataObject, guildId){
     createFolder(guildId);
-    console.log('------------------------------------------------');
-    console.log(dataObject);
-    console.log('------------------------------------------------');
+
     //If the file doesn't exist splice the array containing all songs to start fresh on a new day
     if(!fs.existsSync('./' + getFilepath(guildId).toString() + '/' + musicStats.getDate().toString() + '.json')){
         console.log(dataObject);
