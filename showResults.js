@@ -1,12 +1,9 @@
 const fs = require('fs');
 const musicStats = require('./musicStats.js');
-const { getFilepath, getFilepathLlastMonth } = require('./folderStructure.js');
+const { getFilepathLlastMonth } = require('./folderStructure.js');
 const cron = require('node-cron');
-const { count } = require('console');
 const users = require('./users.js');
-const client = require('./index.js');
-const Canvas = require('canvas');
-const { MessageAttachment } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 
@@ -28,7 +25,7 @@ module.exports = {
 				guild.cronJob.stop();
 			}
 
-			guild.cronJob = cron.schedule("31 2 26 * *", async function () {
+			guild.cronJob = cron.schedule("45 22 26 * *", async function () {
                 console.log("cronjob ran " + channel.guildId);
 				await displayMusicTierList(guild.guildChannel);
 			},{
@@ -57,46 +54,22 @@ module.exports = {
         const list = composeTopTenList(filteredList);
  
         await guildChannel.send('Top ten list for: ' + guildChannel.guild.name);
+
         let test = ' ';
         list.forEach(async list => {
             test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
         });
-        let canvas = await constructCanvas(list);
 
-        await guildChannel.send({ files: [canvas] });
-
-    }
-
-async function constructCanvas(songList){
-    const canvas = Canvas.createCanvas(700, 700);
-    const context = canvas.getContext('2d');
-
-    const background = await Canvas.loadImage('./canvas.jpg');
-
-    // This uses the canvas dimensions to stretch the image onto the entire canvas
-    context.drawImage(background, 0, 0, canvas.width, canvas.height);
+        const embedMessage = new MessageEmbed()
+        .setColor('#F0F8FF')
+        .setTitle('Most played songs for: ' + guildChannel.guild.name)
+        .setDescription(test);
     
-    context.strokeRect(0, 0, canvas.width, canvas.height);
 
-    // Select the font size and type from one of the natively available fonts
-    context.font = '30px sans-serif';
+        await guildChannel.send({ embeds: [embedMessage] });
 
-    // Select the style that will be used to fill the text in
-    context.fillStyle = '#ffffff';
-
-    // Actually fill the text with a solid color
-    i = 660;
-    for(const item of songList){
-        console.log(item);
-        context.fillText(item.songName + ' - ' + 'Played: ' + item.count , canvas.width - 650, canvas.height - i);
-        i = i - 50;
     }
 
-    // Use the helpful Attachment class structure to process the file for you
-    const attachment = new MessageAttachment(canvas.toBuffer(), 'profile-image.png');
-
-    return attachment;
-}
 //Filters the music by checking at the startTime for every object in the array
 function filterMusicList(listToBeSorted) {
     const uniqueIds = [];
