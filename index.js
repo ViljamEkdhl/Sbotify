@@ -6,8 +6,19 @@ const { token } = require('./config.json');
 const { userInList, addUserToList } = require('./users.js');
 const commands = require('./commands.js');
 
+const sweepSettings = {
+	interval: 14400, // 4h
+	lifetime: 3600, // 1h
+}
+
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES] });
+const client = new Client({ 
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES],
+	sweepers: {
+		messages: sweepSettings
+	},
+
+});
 
 
 // When the client is ready, run this code (only once)
