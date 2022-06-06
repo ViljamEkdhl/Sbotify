@@ -10,9 +10,6 @@ module.exports = {
 
     const { commandName } = Interaction;
 
-    if(commandName === 'initiate'){
-        //await showResults.displayMusicTierList(client);
-    };
     if(commandName === 'showresult'){
         const channel = Interaction.options.getChannel('destination');
         const setting = Interaction.options.getString('settings');

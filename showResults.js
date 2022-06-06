@@ -18,6 +18,8 @@ module.exports = {
         guild.resultRatio = Interaction.options.getString('settings');
         guild.guildChannel = channel;
     
+        //Cringe code, i know :C refactoring needed <3
+        //MONTHLY
         if (guild.resultRatio === "result_monthly") {
             console.log("is monthly " + channel.guildId);
 			if (guild.cronJob != "") {
@@ -26,6 +28,48 @@ module.exports = {
 			}
 
 			guild.cronJob = cron.schedule("1 0 1 * *", async function () {
+                console.log("cronjob ran " + channel.guildId);
+				await displayMusicTierList(guild.guildChannel);
+			},{
+                scheduled: true
+            });
+		}
+        if (guild.resultRatio === "result_biweekly") {
+            console.log("is biweekly " + channel.guildId);
+			if (guild.cronJob != "") {
+                console.log("cronjob stopped " + channel.guildId);
+				guild.cronJob.stop();
+			}
+
+			guild.cronJob = cron.schedule("1 0 14 * *", async function () {
+                console.log("cronjob ran " + channel.guildId);
+				await displayMusicTierList(guild.guildChannel);
+			},{
+                scheduled: true
+            });
+		}
+        if (guild.resultRatio === "result_weekly") {
+            console.log("is weekly " + channel.guildId);
+			if (guild.cronJob != "") {
+                console.log("cronjob stopped " + channel.guildId);
+				guild.cronJob.stop();
+			}
+
+			guild.cronJob = cron.schedule("1 0 * * thu", async function () {
+                console.log("cronjob ran " + channel.guildId);
+				await displayMusicTierList(guild.guildChannel);
+			},{
+                scheduled: true
+            });
+		}
+        if (guild.resultRatio === "result_daily") {
+            console.log("is daily " + channel.guildId);
+			if (guild.cronJob != "") {
+                console.log("cronjob stopped " + channel.guildId);
+				guild.cronJob.stop();
+			}
+
+			guild.cronJob = cron.schedule("1 0 * * *", async function () {
                 console.log("cronjob ran " + channel.guildId);
 				await displayMusicTierList(guild.guildChannel);
 			},{
