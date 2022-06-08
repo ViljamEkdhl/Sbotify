@@ -5,6 +5,7 @@ const fs = require('fs'); // Needed for folders
 const path = require('path');
 const { getFilepath } = require('./folderStructure.js');
 const folderStructure = require('./folderStructure.js');
+const { createConfigFolder, createGuildConfigFile } = require('./guildConfigs.js');
 
 const guildMap = new Map();
 let memberList = []; //list of all the members currently listening to spotify
@@ -70,6 +71,7 @@ module.exports = {
     },
 
     initiate: async function(guilds){
+        createConfigFolder();
 
         for(const key of guilds.keys()){
             if(!guildMap.has(key)){
@@ -79,8 +81,11 @@ module.exports = {
                     resultRatio: '',
                     cronJob: ''
                 })
+                createGuildConfigFile(key);
             }
         }
+
+
         console.log(guildMap);
         await checkForMembersActivity(memberList);
     },

@@ -1,4 +1,4 @@
-const { getMonth, getYear } = require("./musicStats")
+const { getMonth, getYear, getTodaysDay } = require("./musicStats")
 
 let folderName = 'Data/'
 
@@ -10,6 +10,8 @@ getFilepath: function (guildId){
 getFilepathLlastMonth: function (guildId){
   //console.log(guildId);
   return folderName +  guildId + '/' + getYear() + '/' + (getMonth() - 1);
+},
+getFilepathLastDay: function(guildId){
+return folderName + guildId + '/' + getYear() + '/' + getMonth() + '/' +  getTodaysDay();
 }
-
 }

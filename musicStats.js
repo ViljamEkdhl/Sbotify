@@ -12,6 +12,10 @@ module.exports = {
 
     getYear: function(){
         return new Date().getFullYear();
+    },
+
+    getTodaysDay: function(){
+        return new Date().getDay();
     }
 }
 
