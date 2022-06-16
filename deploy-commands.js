@@ -11,9 +11,6 @@ const commands = [
 		.setDescription('How often do you want the bot to display the tierlist?')
 		.setRequired(true)
 		.addChoice('Monthly', 'result_monthly')
-		.addChoice('Weekly', 'result_weekly')
-		.addChoice('BiWeekly', 'result_biweekly')
-		.addChoice('Daily', 'result_daily')
 	)
 	.addChannelOption(option => 
 		option.setName('destination')

@@ -1,99 +1,52 @@
 const fs = require('fs');
-const musicStats = require('./musicStats.js');
-const { getFilepathLlastMonth } = require('./folderStructure.js');
+const musicStats = require('./dateFunctions.js');
 const cron = require('node-cron');
-const users = require('./users.js');
 const { MessageEmbed } = require('discord.js');
+const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig } = require('./storage.js')
 
 module.exports = {
 
     //This function changes the intervalls for the music top 10 list.
     //Returning true means that the change was successfull and false means that the change wasn't possible.
     changeRatio: async function (Interaction, channel) {
-        //console.log(Interaction);
-        let guildMap = users.getGuildMap();
-        //console.log(guildMap);
-        const guild = guildMap.get(channel.guildId);
 
-        guild.resultRatio = Interaction.options.getString('settings');
-        guild.guildChannel = channel;
-    
-        //Cringe code, i know :C refactoring needed <3
+        //let guildMap = getConfig();
+        let config = getConfig(channel.guildId);
+
+        if(config === undefined){
+            config = {songList: [], guildChannel: '', resultRatio: ''};
+        }
+
+
+
+        config.resultRatio = Interaction.options.getString('settings');
+        config.guildChannel = channel;
+        setConfig(channel.guildId, config);
+
         //MONTHLY
-        if (guild.resultRatio === "result_monthly") {
+        if (config.resultRatio === "result_monthly") {
             console.log("is monthly " + channel.guildId);
-			if (guild.cronJob != "") {
+            console.log(getCronJob());
+			if (getCronJob() != undefined) {
                 console.log("cronjob stopped " + channel.guildId);
-				guild.cronJob.stop();
+				config.cronJob.stop();
 			}
 
-			guild.cronJob = cron.schedule("1 0 1 * *", async function () {
+			setCronJob(channel.guildId, cron.schedule("18 4 16 * *", async function () {
                 console.log("cronjob ran " + channel.guildId);
-				await displayMusicTierList(guild.guildChannel);
+				await displayMusicTierList(config.guildChannel, channel.guildId);
 			},{
                 scheduled: true
-            });
-		}
-        if (guild.resultRatio === "result_biweekly") {
-            console.log("is biweekly " + channel.guildId);
-			if (guild.cronJob != "") {
-                console.log("cronjob stopped " + channel.guildId);
-				guild.cronJob.stop();
-			}
-
-			guild.cronJob = cron.schedule("1 0 14 * *", async function () {
-                console.log("cronjob ran " + channel.guildId);
-				await displayMusicTierList(guild.guildChannel);
-			},{
-                scheduled: true
-            });
-		}
-        if (guild.resultRatio === "result_weekly") {
-            console.log("is weekly " + channel.guildId);
-			if (guild.cronJob != "") {
-                console.log("cronjob stopped " + channel.guildId);
-				guild.cronJob.stop();
-			}
-
-			guild.cronJob = cron.schedule("1 0 * * thu", async function () {
-                console.log("cronjob ran " + channel.guildId);
-				await displayMusicTierList(guild.guildChannel);
-			},{
-                scheduled: true
-            });
-		}
-        if (guild.resultRatio === "result_daily") {
-            console.log("is daily " + channel.guildId);
-			if (guild.cronJob != "") {
-                console.log("cronjob stopped " + channel.guildId);
-				guild.cronJob.stop();
-			}
-
-			guild.cronJob = cron.schedule("1 0 * * *", async function () {
-                console.log("cronjob ran " + channel.guildId);
-				await displayMusicTierList(guild.guildChannel);
-			},{
-                scheduled: true
-            });
+            }));
 		}
         return true;
-
     },
 }
 
     //Creates a array with all the data from the last month and displays it on the server
-    async function displayMusicTierList (guildChannel) {
+    async function displayMusicTierList (guildChannel, guildId) {
 
-        let dirname = getFilepathLlastMonth(guildChannel.guildId).toString();
-        let unfilteredData = [];
-        const filenames = fs.readdirSync(dirname);
-
-        filenames.forEach(file => {
-            var readFile = fs.readFileSync(dirname + '/' + file.toString()).toString();
-            unfilteredData = unfilteredData.concat(JSON.parse(readFile));
-
-        });
-
+        const unfilteredData = getMusiclist(guildId);
         const filteredList = filterMusicList(unfilteredData);
         const list = composeTopTenList(filteredList);
  
