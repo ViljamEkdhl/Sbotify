@@ -1,4 +1,3 @@
-const fs = require('fs');
 const musicStats = require('./dateFunctions.js');
 const cron = require('node-cron');
 const { MessageEmbed } = require('discord.js');
@@ -11,33 +10,41 @@ module.exports = {
     changeRatio: async function (Interaction, channel) {
 
         //let guildMap = getConfig();
+        //this line creates the undefined.js because channel.guildId from index
         let config = getConfig(channel.guildId);
 
         if(config === undefined){
             config = {songList: [], guildChannel: '', resultRatio: ''};
         }
 
+        try {
+            config.resultRatio = Interaction.options.getString('settings');
+        } catch (error) {
+            
+        }
 
-
-        config.resultRatio = Interaction.options.getString('settings');
+        if(config.resultRatio === undefined){
+            config.resultRatio = Interaction;
+        }
         config.guildChannel = channel;
         setConfig(channel.guildId, config);
 
         //MONTHLY
         if (config.resultRatio === "result_monthly") {
             console.log("is monthly " + channel.guildId);
-            console.log(getCronJob());
-			if (getCronJob() != undefined) {
+			if (getCronJob(channel.guildId) != undefined) {
                 console.log("cronjob stopped " + channel.guildId);
-				config.cronJob.stop();
+                const task = getCronJob(channel.guildId);
+				task.stop();
 			}
 
-			setCronJob(channel.guildId, cron.schedule("18 4 16 * *", async function () {
+            const task = cron.schedule("40 15 21 * *", async function () {
                 console.log("cronjob ran " + channel.guildId);
 				await displayMusicTierList(config.guildChannel, channel.guildId);
 			},{
                 scheduled: true
-            }));
+            })
+			setCronJob(channel.guildId, task);
 		}
         return true;
     },

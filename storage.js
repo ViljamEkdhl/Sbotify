@@ -6,12 +6,18 @@ const cronMap = new Map();
 
 module.exports = {
     getConfig: function(guildId){
+        if(guildId === undefined){return};
         const dirPath = 'Configs/'
 
-        if (fs.existsSync(dirPath + guildId.toString() + '.json')) {
-            let configFile = fs.readFileSync(dirPath + guildId.toString() + '.json', {encoding: 'utf-8'});
-            return JSON.parse(configFile);
+        try {
+            if (fs.existsSync(dirPath + guildId.toString() + '.json')) {
+                let configFile = fs.readFileSync(dirPath + guildId.toString() + '.json', {encoding: 'utf-8'});
+                return JSON.parse(configFile);
+            }
+        } catch (error) {
+            console.log(guildId + ' This guild doesnt have a configfile setup, do that by using the /command ');
         }
+
     },
 
     setConfig: function(guildId, config){
@@ -40,10 +46,15 @@ module.exports = {
     },
 
     getCronJob: function(guildId){
-        return cronMap.get(guildId);
+        const test = cronMap.get(guildId)
+        console.log(cronMap);
+        console.log('Test is = ' + test);
+        return test;
     },
 
     setCronJob: function(guildId, cronJob){
+
+        console.log('guildId = ' + guildId + ' cronjob is = ' + cronJob)
         cronMap.set(guildId, cronJob);
     }
 }
