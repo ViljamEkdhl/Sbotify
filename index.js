@@ -44,7 +44,6 @@ client.on('ready',() => {
 			}
 		} catch (error) {
 			console.log(key + ' Does not have any settings yet');
-			console.log(error);
 		}
 
 	}
