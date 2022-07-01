@@ -66,7 +66,7 @@ async function scheduleTask (guildId, resultRatio){
             task.stop();
         }
 
-        const task = cron.schedule("23 18 1 * *", async function () {
+        const task = cron.schedule("1 0 1 * *", async function () {
             console.log("cronjob ran " + guildId);
             await displayMusicTierList(config.guildChannel.id, guildId);
         },{
