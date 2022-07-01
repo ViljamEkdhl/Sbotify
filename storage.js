@@ -3,6 +3,7 @@ const fs = require('fs'); // Needed for folders
 const { dir } = require("console");
 
 const cronMap = new Map();
+let client = "";
 
 module.exports = {
     getConfig: function(guildId){
@@ -47,16 +48,21 @@ module.exports = {
 
     getCronJob: function(guildId){
         const test = cronMap.get(guildId)
-        console.log(cronMap);
-        console.log('Test is = ' + test);
         return test;
     },
 
     setCronJob: function(guildId, cronJob){
-
-        console.log('guildId = ' + guildId + ' cronjob is = ' + cronJob)
         cronMap.set(guildId, cronJob);
+    },
+
+    setClient: function(currentClient){
+        client = currentClient;
+    },
+
+    getClient: function(){
+        return client;
     }
+
 }
 
 function writeTofile(dirpath, content, fileName){

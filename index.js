@@ -4,9 +4,10 @@
 const { Client, Intents, Presence } = require('discord.js');
 const { token } = require('./config.json');
 const { userInList, addUserToList, checkForMembersActivity, removeUserFromList } = require('./listeningUsers.js');
-const { changeRatio } = require('./showResults.js')
+const { applyConfigSetting } = require('./showResults.js')
 const commands = require('./commands.js');
-const { getConfig } = require('./storage.js')
+const { getConfig, setClient } = require('./storage.js')
+
 
 const sweepSettings = {
 	interval: 14400, // 4h
@@ -32,17 +33,18 @@ client.once('ready', () => {
 client.on('ready',() => {
 	client.user.setActivity(`on ${client.guilds.cache.size} servers`);
 	console.log(`Ready to serve on ${client.guilds.cache.size} servers, for ${client.users.cache.size} users.`);
+	setClient(client);
 	checkForMembersActivity();
 
 	for (const [key, value] of client.guilds.cache.entries()) {
 		const config = getConfig(key.toString());
 		try {
 			if (config.resultRatio != '') {
-				//Dåligt sätt atm :c
-				//changeRatio(config.resultRatio, key);
+				applyConfigSetting( key, config.resultRatio);
 			}
 		} catch (error) {
 			console.log(key + ' Does not have any settings yet');
+			console.log(error);
 		}
 
 	}

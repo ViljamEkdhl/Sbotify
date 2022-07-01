@@ -1,7 +1,8 @@
 const musicStats = require('./dateFunctions.js');
 const cron = require('node-cron');
 const { MessageEmbed } = require('discord.js');
-const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig } = require('./storage.js')
+const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig, getClient } = require('./storage.js');
+
 
 module.exports = {
 
@@ -30,7 +31,8 @@ module.exports = {
         setConfig(channel.guildId, config);
 
         //MONTHLY
-        if (config.resultRatio === "result_monthly") {
+        scheduleTask(channel.guildId, config.resultRatio);
+        /*if (config.resultRatio === "result_monthly") {
             console.log("is monthly " + channel.guildId);
 			if (getCronJob(channel.guildId) != undefined) {
                 console.log("cronjob stopped " + channel.guildId);
@@ -45,31 +47,63 @@ module.exports = {
                 scheduled: true
             })
 			setCronJob(channel.guildId, task);
-		}
+		}*/
         return true;
     },
+    applyConfigSetting: function (guildId, resultRatio){
+        scheduleTask(guildId, resultRatio);
+    }
 }
 
-    //Creates a array with all the data from the last month and displays it on the server
-    async function displayMusicTierList (guildChannel, guildId) {
+async function scheduleTask (guildId, resultRatio){
+    let config = getConfig(guildId);
 
+    if (resultRatio === "result_monthly") {
+        console.log("is monthly " + guildId);
+        if (getCronJob(guildId) != undefined) {
+            console.log("cronjob stopped " + guildId);
+            const task = getCronJob(guildId);
+            task.stop();
+        }
+
+        const task = cron.schedule("23 18 1 * *", async function () {
+            console.log("cronjob ran " + guildId);
+            await displayMusicTierList(config.guildChannel.id, guildId);
+        },{
+            scheduled: true
+        })
+        setCronJob(guildId, task);
+    }
+}
+    //Creates a array with all the data from the last month and displays it on the server
+    async function displayMusicTierList (guildChannelId, guildId) {
+        console.log('1');
+        const client = getClient();
+        const guildChannel = await client.channels.cache.get(guildChannelId);
+
+        console.log(guildChannel);
+  
         const unfilteredData = getMusiclist(guildId);
         const filteredList = filterMusicList(unfilteredData);
         const list = composeTopTenList(filteredList);
- 
-        await guildChannel.send('Top ten list for: ' + guildChannel.guild.name);
+
+        console.log('2');
+        await guildChannel.send('Top ten list for: ' + guildChannel.name); //HÄR SLUTAR DET FUNGERA
+        console.log('3');
 
         let test = ' ';
         list.forEach(async list => {
             test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
         });
+        console.log('4');
 
         const embedMessage = new MessageEmbed()
         .setColor('#F0F8FF')
         .setTitle('Most played songs for: ' + guildChannel.guild.name)
         .setDescription(test);
     
-
+        console.log('EMBEDDED MESSAGE');
+        console.log(embedMessage);
         await guildChannel.send({ embeds: [embedMessage] });
 
     }
