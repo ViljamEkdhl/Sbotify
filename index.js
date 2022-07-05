@@ -1,7 +1,7 @@
 
 
 // Require the necessary discord.js classes
-const { Client, Intents, Presence } = require('discord.js');
+const { Client, Intents, Presence, Options } = require('discord.js');
 const { token } = require('./config.json');
 const { userInList, addUserToList, checkForMembersActivity, removeUserFromList } = require('./listeningUsers.js');
 const { applyConfigSetting } = require('./showResults.js')
@@ -11,7 +11,7 @@ const { getConfig, setClient } = require('./storage.js')
 
 const sweepSettings = {
 	interval: 14400, // 4h
-	filter: function(err){},
+	lifetime: 3600,
 	
 }
 
@@ -19,7 +19,10 @@ const sweepSettings = {
 const client = new Client({ 
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES],
 	sweepers: {
-		presences: sweepSettings,
+		...Options.defaultSweeperSettings,
+		messages: sweepSettings,
+		threads: sweepSettings,
+		invites: sweepSettings,
 	},
 
 });
@@ -44,6 +47,7 @@ client.on('ready',() => {
 			}
 		} catch (error) {
 			console.log(key + ' Does not have any settings yet');
+
 		}
 
 	}
