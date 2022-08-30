@@ -30,6 +30,7 @@ module.exports = {
         const dirpath = 'Data/' + guildId + '/' + getYear() + '/' + getMonth();
         
         let unfilteredData = [];
+        createFolder(dirpath);
         const filenames = fs.readdirSync(dirpath);
 
         //Returns a list between different dates
