@@ -66,8 +66,8 @@ async function scheduleTask (guildId, resultRatio){
             task.stop();
         }
 
-        //0 or 7 are sunday, therefore 3 should be wednesday, so it should print the list every wednesday 00:07
-        const task = cron.schedule("* 7 * * * 3", async function () {
+        
+        const task = cron.schedule("* 7 0 1 *", async function () {
             console.log("cronjob ran " + guildId);
             await displayMusicTierList(config.guildChannel.id, guildId);
         },{
