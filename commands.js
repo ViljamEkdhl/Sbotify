@@ -1,5 +1,5 @@
 //const showResults = require('./showResults.js');
-const { changeRatio } = require('./showResults.js');
+const { changeRatio, displayCustomTierList } = require('./showResults.js');
 const { MessageAttachment } = require('discord.js');
 
 module.exports = {
@@ -24,12 +24,15 @@ module.exports = {
     };
 
     if(commandName === 'printlist'){
-        const startDate = Interaction.options.getInteger('integerstart');
-        const endDate = Interaction.options.getInteger('integerend');
+        const startDate = Interaction.options.getInteger('start');
+        const endDate = Interaction.options.getInteger('stop');
 
         if(startDate > endDate){
             await Interaction.reply('The start date cannot come after the end date :)');
+        }else{
+            displayCustomTierList(Interaction, startDate, endDate);
         }
+
 
     };
    },

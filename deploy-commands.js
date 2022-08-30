@@ -21,14 +21,14 @@ const commands = [
 
 	new SlashCommandBuilder().setName('printlist').setDescription('Prints a list within the given parameters')
 	.addIntegerOption(option =>
-		option.setName('integerstart')
+		option.setName('start')
 			.setDescription('Start date')
 			.setMinValue(1)
 			.setMaxValue(31)
 			.setRequired(true)
 	)
 	.addIntegerOption(option =>
-		option.setName('integerend')
+		option.setName('stop')
 			.setDescription('End date')
 			.setMinValue(2)
 			.setMaxValue(31)

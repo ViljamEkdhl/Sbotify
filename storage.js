@@ -32,6 +32,18 @@ module.exports = {
         let unfilteredData = [];
         const filenames = fs.readdirSync(dirpath);
 
+        //Returns a list between different dates
+        if(startDate > 0 && endDate > 0){
+
+            filenames.forEach(file => {
+                if(file.substring(8,10) >= startDate && file.substring(8,10) <= endDate){
+                    const readFile = fs.readFileSync(dirpath + '/' + file.toString()).toString();
+                    unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+                }
+            });
+            return unfilteredData
+        }
+
         filenames.forEach(file => {
             const readFile = fs.readFileSync(dirpath + '/' + file.toString()).toString();
             unfilteredData = unfilteredData.concat(JSON.parse(readFile));

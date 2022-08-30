@@ -52,6 +52,27 @@ module.exports = {
     },
     applyConfigSetting: function (guildId, resultRatio){
         scheduleTask(guildId, resultRatio);
+    },
+    displayCustomTierList:  async function (Interaction, startDate, endDate){
+        const unfilteredData = getMusiclist(Interaction.guildId, startDate, endDate);
+        const filteredList = filterMusicList(unfilteredData);
+        const list = composeTopTenList(filteredList);
+
+        let test = ' ';
+        list.forEach(async list => {
+            test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
+        });
+    
+        const embedMessage = new MessageEmbed()
+        .setColor('#F0F8FF')
+        .setTitle('Top ten list from ' + startDate + 'st - ' + endDate +  'st')
+        .setDescription(test);
+
+        if(test.length < 2){
+            Interaction.reply('Not enough information! Try with different dates :)');
+        }else{
+            await Interaction.reply({embeds: [embedMessage]});
+        }
     }
 }
 
@@ -76,38 +97,38 @@ async function scheduleTask (guildId, resultRatio){
         setCronJob(guildId, task);
     }
 }
-    //Creates a array with all the data from the last month and displays it on the server
-    async function displayMusicTierList (guildChannelId, guildId) {
-        console.log('1');
-        const client = getClient();
-        const guildChannel = await client.channels.cache.get(guildChannelId);
+//Creates a array with all the data from the last month and displays it on the server
+async function displayMusicTierList (guildChannelId, guildId) {
+    console.log('1');
+    const client = getClient();
+    const guildChannel = await client.channels.cache.get(guildChannelId);
 
-        console.log(guildChannel);
-  
-        const unfilteredData = getMusiclist(guildId);
-        const filteredList = filterMusicList(unfilteredData);
-        const list = composeTopTenList(filteredList);
+    console.log(guildChannel);
 
-        console.log('2');
-        await guildChannel.send('Top ten list for: ' + guildChannel.name);
-        console.log('3');
+    const unfilteredData = getMusiclist(guildId);
+    const filteredList = filterMusicList(unfilteredData);
+    const list = composeTopTenList(filteredList);
 
-        let test = ' ';
-        list.forEach(async list => {
-            test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
-        });
-        console.log('4');
+    console.log('2');
+    await guildChannel.send('Top ten list for: ' + guildChannel.name);
+    console.log('3');
 
-        const embedMessage = new MessageEmbed()
-        .setColor('#F0F8FF')
-        .setTitle('Most played songs for: ' + guildChannel.guild.name)
-        .setDescription(test);
-    
-        console.log('EMBEDDED MESSAGE');
-        console.log(embedMessage);
-        await guildChannel.send({ embeds: [embedMessage] });
+    let test = ' ';
+    list.forEach(async list => {
+        test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
+    });
+    console.log('4');
 
-    }
+    const embedMessage = new MessageEmbed()
+    .setColor('#F0F8FF')
+    .setTitle('Most played songs for: ' + guildChannel.guild.name)
+    .setDescription(test);
+
+    console.log('EMBEDDED MESSAGE');
+    console.log(embedMessage);
+    await guildChannel.send({ embeds: [embedMessage] });
+
+}
 
 //Filters the music by checking at the startTime for every object in the array
 function filterMusicList(listToBeSorted) {
