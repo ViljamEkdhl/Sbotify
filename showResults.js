@@ -66,7 +66,8 @@ async function scheduleTask (guildId, resultRatio){
             task.stop();
         }
 
-        const task = cron.schedule("1 0 1 * *", async function () {
+        //0 or 7 are sunday, therefore 3 should be wednesday, so it should print the list every wednesday 00:07
+        const task = cron.schedule("* 7 * * * 3", async function () {
             console.log("cronjob ran " + guildId);
             await displayMusicTierList(config.guildChannel.id, guildId);
         },{
@@ -88,7 +89,7 @@ async function scheduleTask (guildId, resultRatio){
         const list = composeTopTenList(filteredList);
 
         console.log('2');
-        await guildChannel.send('Top ten list for: ' + guildChannel.name); //HÄR SLUTAR DET FUNGERA
+        await guildChannel.send('Top ten list for: ' + guildChannel.name);
         console.log('3');
 
         let test = ' ';

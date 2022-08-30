@@ -1,5 +1,5 @@
 
-const { setMusiclist, setConfig, getConfig} = require('./storage.js')
+const { setMusiclist, getMusiclist, setConfig, getConfig} = require('./storage.js')
 let memberList = [];
 
 module.exports = {
@@ -86,7 +86,10 @@ module.exports = {
                     timeDif = activity.timestamps.end.getHours() + ':' + activity.timestamps.end.getMinutes();
                     //console.dir(timeDif);
 
-                    setMusiclist(member.guild.id, songInformation);
+                    let object = getMusiclist(member.guild.id);
+                    object.push(songInformation);
+
+                    setMusiclist(member.guild.id, object);
 
         
                 } catch (error) {
