@@ -19,6 +19,25 @@ const commands = [
 		.addChannelType(ChannelType.GuildText)
 	),
 
+	new SlashCommandBuilder().setName('printlist').setDescription('Prints a list within the given parameters')
+	.addIntegerOption(option =>
+		option.setName('integerstart')
+			.setDescription('Start date')
+			.setMinValue(1)
+			.setMaxValue(31)
+			.setRequired(true)
+	)
+	.addIntegerOption(option =>
+		option.setName('integerend')
+			.setDescription('End date')
+			.setMinValue(2)
+			.setMaxValue(31)
+			.setRequired(true)
+	)
+	
+
+
+
 ]
 	.map(command => command.toJSON());
 

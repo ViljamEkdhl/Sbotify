@@ -22,5 +22,15 @@ module.exports = {
             await Interaction.reply('Setting was successfully changed!');
         }
     };
+
+    if(commandName === 'printlist'){
+        const startDate = Interaction.options.getInteger('integerstart');
+        const endDate = Interaction.options.getInteger('integerend');
+
+        if(startDate > endDate){
+            await Interaction.reply('The start date cannot come after the end date :)');
+        }
+
+    };
    },
 }
