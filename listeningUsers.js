@@ -1,5 +1,5 @@
 
-const { setMusiclist, getMusiclist, setConfig, getConfig} = require('./storage.js')
+const { setMusiclist, getMusiclist, setConfig, getConfig,} = require('./storage.js');
 let memberList = [];
 
 module.exports = {
@@ -72,7 +72,6 @@ module.exports = {
                 memberList.forEach(member => {
                     
                 try {
-                    //console.log(member.presence.activities[0]);
                     const activity = member.presence.activities.find(element => element.name === 'Spotify');
                 
                     const songInformation = {
@@ -86,10 +85,10 @@ module.exports = {
                     timeDif = activity.timestamps.end.getHours() + ':' + activity.timestamps.end.getMinutes();
                     //console.dir(timeDif);
 
-                    let object = getMusiclist(member.guild.id);
-                    object.push(songInformation);
+                    //let object = getMusiclist(member.guild.id);
+                    //object.push(songInformation);
 
-                    setMusiclist(member.guild.id, object);
+                    setMusiclist(member.guild.id, songInformation);
 
         
                 } catch (error) {

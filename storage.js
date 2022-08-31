@@ -28,14 +28,12 @@ module.exports = {
 
     getMusiclist: function(guildId, startDate, endDate){
         const dirpath = 'Data/' + guildId + '/' + getYear() + '/' + getMonth();
-        
         let unfilteredData = [];
         createFolder(dirpath);
         const filenames = fs.readdirSync(dirpath);
 
         //Returns a list between different dates
         if(startDate > 0 && endDate > 0){
-
             filenames.forEach(file => {
                 if(file.substring(8,10) >= startDate && file.substring(8,10) <= endDate){
                     const readFile = fs.readFileSync(dirpath + '/' + file.toString()).toString();
@@ -45,6 +43,7 @@ module.exports = {
             return unfilteredData
         }
 
+        //Return whole month
         filenames.forEach(file => {
             const readFile = fs.readFileSync(dirpath + '/' + file.toString()).toString();
             unfilteredData = unfilteredData.concat(JSON.parse(readFile));
@@ -53,10 +52,9 @@ module.exports = {
         return unfilteredData;
     },
 
-    setMusiclist: function(guildId, musicList){
+    setMusiclist: function(guildId, song){
         const dirpath = 'Data/' +  guildId + '/' + getYear() + '/' + getMonth() + '/';
-        writeTofile(dirpath, musicList, getDate());
-    
+        writeTofile(dirpath, song, getDate());
     },
 
     getCronJob: function(guildId){
@@ -80,9 +78,18 @@ module.exports = {
 
 function writeTofile(dirpath, content, fileName){
     createFolder(dirpath);
-    fs.writeFileSync(dirpath + fileName  + '.json', JSON.stringify(content, null, 4), { flag: 'w+' }, err => {
-        console.log(err);
-    });
+
+    try {
+        const data = fs.readFileSync(dirpath + fileName + '.json');
+        let json = JSON.parse(data)
+        json.push(content);
+        fs.writeFileSync(dirpath + fileName  + '.json', JSON.stringify(json, null, 4), { flag: 'w+' });
+        
+    } catch (error) {
+        fs.writeFileSync(dirpath + fileName  + '.json', JSON.stringify([content], null, 4), { flag: 'w+' });
+    }
+
+    
 }
 
 function createFolder(filePath){
