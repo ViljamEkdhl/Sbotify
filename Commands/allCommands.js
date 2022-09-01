@@ -1,5 +1,5 @@
 //const showResults = require('./showResults.js');
-const { changeRatio, displayCustomTierList } = require('./showResults.js');
+const { changeRatio, displayCustomTierList } = require('../showResults.js');
 const { MessageAttachment } = require('discord.js');
 
 module.exports = {

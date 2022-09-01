@@ -88,7 +88,7 @@ async function scheduleTask (guildId, resultRatio){
         }
 
         
-        const task = cron.schedule("* 7 0 1 * *", async function () {
+        const task = cron.schedule("* 6 1 1 * *", async function () {
             console.log("cronjob ran " + guildId);
             await displayMusicTierList(config.guildChannel.id, guildId);
         },{
@@ -105,7 +105,7 @@ async function displayMusicTierList (guildChannelId, guildId) {
 
     console.log(guildChannel);
 
-    const unfilteredData = getMusiclist(guildId);
+    const unfilteredData = getMusiclist(guildId); //THIS FUCKED IT UP I BELIEVE
     const filteredList = filterMusicList(unfilteredData);
     const list = composeTopTenList(filteredList);
 

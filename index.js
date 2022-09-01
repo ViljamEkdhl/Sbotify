@@ -1,11 +1,12 @@
 
 
 // Require the necessary discord.js classes
-const { Client, Intents, Presence, Options } = require('discord.js');
+const { Client, Intents, Presence, Options, Collection } = require('discord.js');
+const fs = require('fs');
 const { token } = require('./config.json');
 const { userInList, addUserToList, checkForMembersActivity, removeUserFromList } = require('./listeningUsers.js');
-const { applyConfigSetting } = require('./showResults.js')
-const commands = require('./commands.js');
+const { applyConfigSetting } = require('./showResults.js');
+const commands = require('./Commands/allCommands.js');
 const { getConfig, setClient } = require('./storage.js')
 
 
@@ -26,7 +27,6 @@ const client = new Client({
 	},
 
 });
-
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
