@@ -5,7 +5,7 @@ const { Client, Intents, Presence, Options, Collection } = require('discord.js')
 const fs = require('fs');
 const { token } = require('./config.json');
 const { userInList, addUserToList, checkForMembersActivity, removeUserFromList } = require('./listeningUsers.js');
-const { applyConfigSetting } = require('./showResults.js');
+const { scheduleTask } = require('./cronJob.js');
 const commands = require('./Commands/allCommands.js');
 const { getConfig, setClient } = require('./storage.js')
 
@@ -41,9 +41,10 @@ client.on('ready',() => {
 
 	for (const [key, value] of client.guilds.cache.entries()) {
 		const config = getConfig(key.toString());
+		console.log('1');
 		try {
 			if (config.resultRatio != '') {
-				applyConfigSetting( key, config.resultRatio);
+				scheduleTask( key, config.resultRatio);
 			}
 		} catch (error) {
 			console.log(key + ' Does not have any settings yet');

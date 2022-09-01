@@ -59,11 +59,18 @@ module.exports = {
 
     getCronJob: function(guildId){
         const test = cronMap.get(guildId)
+        console.log('GET CRONJOB');
+        console.log(test);
         return test;
     },
 
     setCronJob: function(guildId, cronJob){
+        console.log('SET CRONJOB');
+        console.log(cronJob);
+        console.log('1');
+        
         cronMap.set(guildId, cronJob);
+        console.dir(cronMap);
     },
 
     setClient: function(currentClient){
