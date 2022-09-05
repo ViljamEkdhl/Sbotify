@@ -7,13 +7,15 @@ let client = "";
 
 module.exports = {
     getConfig: function(guildId){
+        console.log( "guildId being sent to getConfig " + guildId)
         if(guildId === undefined){return};
         const dirPath = 'Configs/'
 
         try {
             if (fs.existsSync(dirPath + guildId.toString() + '.json')) {
                 let configFile = fs.readFileSync(dirPath + guildId.toString() + '.json', {encoding: 'utf-8'});
-                return JSON.parse(configFile);
+                const configObject = JSON.parse(configFile)
+                return configObject[0];
             }
         } catch (error) {
             console.log(guildId + ' This guild doesnt have a configfile setup, do that by using the /command ');
@@ -52,6 +54,20 @@ module.exports = {
         return unfilteredData;
     },
 
+    getLastMonthMusicList: function(guildId){
+        const dirpath = 'Data/' + guildId + '/' + getYear() + '/' + getMonth();
+        let unfilteredData = [];
+
+        const filenames = fs.readdirSync(dirpath);
+
+        filenames.forEach(file => {
+            const readFile = fs.readFileSync(dirpath + '/' + file.toString()).toString();
+            unfilteredData = unfilteredData.concat(JSON.parse(readFile));
+        });
+
+        return unfilteredData;
+    },
+
     setMusiclist: function(guildId, song){
         const dirpath = 'Data/' +  guildId + '/' + getYear() + '/' + getMonth() + '/';
         writeTofile(dirpath, song, getDate());
@@ -59,18 +75,11 @@ module.exports = {
 
     getCronJob: function(guildId){
         const test = cronMap.get(guildId)
-        console.log('GET CRONJOB');
-        console.log(test);
         return test;
     },
 
     setCronJob: function(guildId, cronJob){
-        console.log('SET CRONJOB');
-        console.log(cronJob);
-        console.log('1');
-        
         cronMap.set(guildId, cronJob);
-        console.dir(cronMap);
     },
 
     setClient: function(currentClient){

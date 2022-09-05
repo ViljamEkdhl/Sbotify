@@ -1,7 +1,7 @@
 const musicStats = require('./dateFunctions.js');
 const cron = require('node-cron');
 const { MessageEmbed } = require('discord.js');
-const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig, getClient } = require('./storage.js');
+const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig, getClient, getLastMonthMusicList } = require('./storage.js');
 const { filterMusicList, composeTopTenList } = require('./listCreater.js');
 
 
@@ -9,6 +9,7 @@ module.exports = {
 
     scheduleTask: async function(guildId, resultRatio){
         let config = getConfig(guildId);
+        console.dir(config);
 
         if (resultRatio === "result_monthly") {
             console.log("is monthly " + guildId);
@@ -19,8 +20,10 @@ module.exports = {
             }
 
             
-            const task = cron.schedule("* 21 13 1 * *", async function () {
+            const task = cron.schedule("20 23 5 * *", async function () {
+                console.log(config.guildChannel.id);
                 console.log("cronjob ran " + guildId);
+                console.log(config.guildChannel.id);
                 await displayMusicTierList(config.guildChannel.id, guildId);
             },{
                 scheduled: true
@@ -38,7 +41,7 @@ async function displayMusicTierList (guildChannelId, guildId) {
 
     console.log(guildChannel);
 
-    const unfilteredData = getMusiclist(guildId); //THIS FUCKED IT UP I BELIEVE
+    const unfilteredData = getLastMonthMusicList(guildId); //THIS FUCKED IT UP I BELIEVE
     const filteredList = filterMusicList(unfilteredData);
     const list = composeTopTenList(filteredList);
 

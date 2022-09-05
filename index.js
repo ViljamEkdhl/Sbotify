@@ -41,7 +41,7 @@ client.on('ready',() => {
 
 	for (const [key, value] of client.guilds.cache.entries()) {
 		const config = getConfig(key.toString());
-		console.log('1');
+		//console.dir(config[0].resultRatio);
 		try {
 			if (config.resultRatio != '') {
 				scheduleTask( key, config.resultRatio);
