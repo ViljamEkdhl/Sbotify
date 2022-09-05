@@ -16,6 +16,12 @@ module.exports = {
 
     getTodaysDay: function(){
         return new Date().getDay();
+    },
+
+    getLastMonth: function(){
+        console.log("TEST");
+        console.log(new Date().getMonth());
+        return new Date().getMonth();
     }
 }
 

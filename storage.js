@@ -1,4 +1,4 @@
-const { getDate, getMonth, getYear } = require("./dateFunctions");
+const { getDate, getMonth, getYear, getLastMonth } = require("./dateFunctions");
 const fs = require('fs'); // Needed for folders
 const { dir } = require("console");
 
@@ -55,7 +55,7 @@ module.exports = {
     },
 
     getLastMonthMusicList: function(guildId){
-        const dirpath = 'Data/' + guildId + '/' + getYear() + '/' + getMonth();
+        const dirpath = 'Data/' + guildId + '/' + getYear() + '/' + getLastMonth();
         let unfilteredData = [];
 
         const filenames = fs.readdirSync(dirpath);

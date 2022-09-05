@@ -20,7 +20,7 @@ module.exports = {
             }
 
             
-            const task = cron.schedule("20 23 5 * *", async function () {
+            const task = cron.schedule("7 0 1 * *", async function () {
                 console.log(config.guildChannel.id);
                 console.log("cronjob ran " + guildId);
                 console.log(config.guildChannel.id);
