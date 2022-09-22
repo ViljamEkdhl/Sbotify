@@ -11,7 +11,7 @@ const { getConfig, setClient } = require('./storage.js')
 
 
 const sweepSettings = {
-	interval: 14400, // 4h
+	interval: 14400,
 	lifetime: 3600,
 	
 }
@@ -20,10 +20,13 @@ const sweepSettings = {
 const client = new Client({ 
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES],
 	sweepers: {
-		...Options.defaultSweeperSettings,
 		messages: sweepSettings,
 		threads: sweepSettings,
-		invites: sweepSettings,
+		presences: 
+		{
+			interval: 14400,
+			filter: (value, key, collection) => value,
+		}
 	},
 
 });
@@ -31,6 +34,8 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
 	console.log('Ready!');
+	
+	
 });
 
 client.on('ready',() => {
