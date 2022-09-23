@@ -25,7 +25,7 @@ const client = new Client({
 		presences: 
 		{
 			interval: 14400,
-			filter: (value, key, collection) => value,
+			filter: () => true,
 		}
 	},
 
