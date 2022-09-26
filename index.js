@@ -24,8 +24,10 @@ const client = new Client({
 		threads: sweepSettings,
 		presences: 
 		{
-			interval: 14400,
-			filter: () => true,
+			interval: 28800, //8 hours
+			filter: function name() {
+				return () => true;
+			},
 		}
 	},
 
