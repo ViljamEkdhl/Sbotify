@@ -65,11 +65,11 @@ module.exports = {
             //console.dir(currentTime);
             loop();
         
-            function loop() {
+             function loop() {
                 //console.log('Initiate search');
                 //console.dir(guildMap);
         
-                memberList.forEach(member => {
+                memberList.forEach(async member => {
                     
                 try {
                     const activity = member.presence.activities.find(element => element.name === 'Spotify');
@@ -92,12 +92,25 @@ module.exports = {
 
         
                 } catch (error) {
+                    /*const test = (await member.fetch(true)).presence;
+                    console.log('PRESENCE.ACTIVITIES');
+                    console.log(member.user.username);
+                    console.log(member.presence);
+                    console.log(test);*/
                     console.log(error);
                 }
         
                 });
-                setTimeout(() => {loop();}, 60000);// körs varje minut.
+                setTimeout(() => {loop();}, 60000);
             }
-        }
+        }    
+}
+
+async function reFetch(member){
+    console.log('PRESENCE.ACTIVITIES');
+    //console.log((await member.fetch(true)))
+    
+    const test = (await member.fetch(true)).presence;
+    console.log(test);
 }
 

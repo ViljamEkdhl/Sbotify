@@ -24,9 +24,15 @@ const client = new Client({
 		threads: sweepSettings,
 		presences: 
 		{
-			interval: 28800, //8 hours
-			filter: function name() {
-				return () => true;
+			interval: 14400, //28800 = 8 hours
+			filter: () => function name(value, key, collection) {
+				
+				if(value.status == 'offline' || value.status == 'idle'){
+					//console.log(value.status);
+					return true;
+				}else{
+					return false;
+				}
 			},
 		}
 	},
