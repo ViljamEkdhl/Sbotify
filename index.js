@@ -27,7 +27,7 @@ const client = new Client({
 			interval: 14400, //28800 = 8 hours
 			filter: () => function name(value, key, collection) {
 				
-				if(value.status == 'offline' || value.status == 'idle'){
+				if(value.status == 'offline'){
 					//console.log(value.status);
 					return true;
 				}else{
