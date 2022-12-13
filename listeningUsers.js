@@ -1,5 +1,5 @@
 
-const { setMusiclist, getMusiclist, setConfig, getConfig,} = require('./storage.js');
+const { setMusiclist } = require('./storage.js');
 let memberList = [];
 
 module.exports = {

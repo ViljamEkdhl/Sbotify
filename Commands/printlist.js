@@ -9,17 +9,17 @@ module.exports = {
         const filteredList = filterMusicList(unfilteredData);
         const list = composeTopTenList(filteredList);
 
-        let test = ' ';
+        let message = ' ';
         list.forEach(async list => {
-            test = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
+            message = test + 'Song: ' + list.songName + ' - ' + 'Played: ' + list.count  + '\n';
         });
     
         const embedMessage = new MessageEmbed()
         .setColor('#F0F8FF')
         .setTitle('Top ten list from ' + startDate + 'st - ' + endDate +  'st')
-        .setDescription(test);
+        .setDescription(message);
 
-        if(test.length < 2){
+        if(message.length < 2){
             Interaction.reply('Not enough information! Try with different dates :)');
         }else{
             await Interaction.reply({embeds: [embedMessage]});

@@ -33,7 +33,15 @@ const commands = [
 			.setMinValue(2)
 			.setMaxValue(31)
 			.setRequired(true)
-	)
+	),
+
+	new SlashCommandBuilder().setName('server-playlist').setDescription('This command creates a spotify playlist and fills it with the servers most popular songs')
+	.addStringOption(option =>
+		option.setName('destination')
+		.setDescription('Channel to display the playlist')
+		.setRequired(true)
+		.addChannelType(ChannelType.GuildText)
+	),
 	
 
 

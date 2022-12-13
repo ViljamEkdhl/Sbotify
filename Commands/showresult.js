@@ -1,4 +1,4 @@
-const { getMusiclist, getConfig, getCronJob, setCronJob, setConfig, getClient } = require('../storage.js');
+const { getConfig, setConfig, } = require('../storage.js');
 const { scheduleTask } = require('../cronJob.js');
 
 module.exports = {
